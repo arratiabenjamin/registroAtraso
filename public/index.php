@@ -5,14 +5,15 @@
 
     //Llamar Clases a Usar
     use MVC\Router;
-    use Controllers\ApoderadoController;
     use Controllers\AtrasoController;
     use Controllers\EstudianteController;
-    use Controllers\FuncionarioController;
     use Controllers\LoginController;
 
     //Creacion de Router
     $router = new Router();
+
+    //Atrasos
+    $router->get('/', [AtrasoController::class, 'index']);
 
     //Login - Autenticacion
     $router->get('/login', [LoginController::class, 'login'], true);

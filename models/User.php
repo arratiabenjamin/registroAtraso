@@ -44,9 +44,13 @@
         }
         public function comprobarPassword($resultado){
             $user = $resultado->fetch_object();
-            $auth = password_verify($this->password, $user->password);
-            debugear($auth);
 
+            if($user->password_func){
+                $auth = password_verify($this->password, $user->password_func);
+            } else {
+                $auth = password_verify($this->password, $user->password_apoderado);
+            }
+            
             if(!$auth){
                 static::$errores[] = 'Password Incorrecto Intente Nuevamente';
             }
@@ -57,6 +61,9 @@
             session_start();
             $_SESSION['usuario'] = $this->rut;
             $_SESSION['login'] = true;
+
+            header('Location: /');
+
         }
 
     }

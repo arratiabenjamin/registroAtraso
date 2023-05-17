@@ -20,7 +20,7 @@
             $auth = $_SESSION['login'] ?? null;
 
             //Rutas Protegidas
-            $rutasProtegidas = ['/index'];
+            $rutasProtegidas = ['/'];
 
             $urlActual = $_SERVER['PATH_INFO'] ?? '/';
             $metodo = $_SERVER['REQUEST_METHOD'];
