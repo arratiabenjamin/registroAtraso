@@ -1,0 +1,19 @@
+{
+    "name": "benja/registro-atrasos-mvc",
+    "description": "Web Registro de Atrasos de Estudiantes en Intituciones",
+    "type": "proyect",
+    "authors": [
+        {
+            "name": "Benjamin Arratia",
+            "email": "benjamin.arratia.santibanez@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Model\\": "./models",
+            "MVC\\": "./",
+            "Controllers\\": "./controllers"
+        }
+    },
+    "require": {}
+}
