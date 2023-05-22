@@ -24,7 +24,7 @@
         public function guardar(){
             //Si no hay id o mejor dicho es Nulo significa que se actualiza
             if(!is_null($this->id)){
-                //Actualizar
+                $this->guardar();
             } else {
                 $this->crear();
             }
@@ -36,6 +36,30 @@
 
             $query = "INSERT INTO" . static::$tabla . " ( " . $keys . " ) VALUES ( ' " . $values . " ' )";
             $resultado = self::$DB->query($query);
+            if($resultado){
+                header('Location: /');
+            }
+        }
+        public function actualizar(){
+            //Sanitizar
+            $atributos = $this->sanitizarAtributos();
+            $values = [];
+
+            foreach($atributos as $key => $value){
+                $values[] = "$key = '$value'";
+            }
+            $query = "UPDATE " . static::$tabla . " SET " . join(' ,', $values) . " WHERE id = $this->id LIMIT 1";
+            $resultado = self::$DB->query($query);
+
+            if($resultado){
+                header('Location: /');
+            }
+
+        }
+        public function eliminar(){
+            $query = "DELETE FROM" . static::$tabla . "WHERE id = " . self::$DB->escape_string($this->id) . " LIMIT 1";
+            $resultado = self::$DB->query($query);
+
             if($resultado){
                 header('Location: /');
             }
@@ -90,4 +114,12 @@
 
         }
 
+        public function sincronizar($args = []) {
+            foreach($args as $key => $value){
+                //Si las propiedades Existen y 
+                if(property_exists($this, $key) && !is_null($value)) {
+                    $this->$key = $value;
+                }
+            }
+        }
     }
