@@ -22,7 +22,7 @@
                     </div>
                 <?php endforeach; ?>
 
-                <form class="form" action="/login" method="post">
+                <form class="form" action="/" method="post">
                     <fieldset>
 
                         <legend> Iniciar sesion </legend>

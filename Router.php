@@ -20,14 +20,14 @@
             $auth = $_SESSION['login'] ?? null;
 
             //Rutas Protegidas
-            $rutasProtegidas = ['/'];
+            $rutasProtegidas = ['/atrasos', '/apoderado'];
 
             $urlActual = $_SERVER['PATH_INFO'] ?? '/';
             $metodo = $_SERVER['REQUEST_METHOD'];
 
             //Proteger Rutas
             if(in_array($urlActual, $rutasProtegidas) && !$auth){
-                header('Location: /login');
+                header('Location: /');
             }
 
             //Guardar FuncAsoc

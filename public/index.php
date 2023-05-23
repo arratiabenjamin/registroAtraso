@@ -13,11 +13,16 @@
     $router = new Router();
 
     //Atrasos
-    $router->get('/', [AtrasoController::class, 'index']);
+    $router->get('/atraso', [AtrasoController::class, 'index']);
+    $router->post('/atraso', [AtrasoController::class, 'eliminar']);
+    $router->get('/atraso/crear', [AtrasoController::class, 'crear']);
+    $router->post('/atraso/crear', [AtrasoController::class, 'crear']);
+    $router->get('/atraso/actualizar', [AtrasoController::class, 'actualizar']);
+    $router->post('/atraso/actualizar', [AtrasoController::class, 'actualizar']);
 
     //Login - Autenticacion
-    $router->get('/login', [LoginController::class, 'login'], true);
-    $router->post('/login', [LoginController::class, 'login'], true);
+    $router->get('/', [LoginController::class, 'login'], true);
+    $router->post('/', [LoginController::class, 'login'], true);
     $router->get('/logout', [LoginController::class, 'logout'], true);
 
     $router->validarURL();

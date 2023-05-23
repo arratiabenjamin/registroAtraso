@@ -60,10 +60,14 @@
         public function autenticar(){
             session_start();
             $_SESSION['usuario'] = $this->rut;
+            $_SESSION['tipo'] = $this->tipo;
             $_SESSION['login'] = true;
 
-            header('Location: /');
-
+            if($_SESSION['tipo'] === 'funcionario'){
+                header('Location: /atraso');
+            }else{
+                header('Location: /apoderado');
+            }
         }
 
     }
