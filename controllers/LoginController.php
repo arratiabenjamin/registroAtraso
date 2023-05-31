@@ -8,10 +8,11 @@
     class LoginController{
 
         public static function login(Router $router){
+
             $errores = [];
 
             if( $_SERVER['REQUEST_METHOD'] === 'POST' ){
-                $user = $_POST['login'];
+                $user = $_POST;
                 if( $user['tipo'] === 'funcionario' ){
                     $auth = new Funcionario($user);
                 }else{
@@ -49,6 +50,6 @@
 
             $router->show( 'auth/login', [
                 'errores' => $errores
-            ] );
+            ], 'login' );
         }
     }

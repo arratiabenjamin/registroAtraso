@@ -10,10 +10,7 @@
 html {
     font-size: 62.5%;
     box-sizing: border-box;
-    background: rgb(0,0,0);
-    background: radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(56,56,56,1) 100%); 
-    background-repeat: no-repeat;
-    height: 100%;
+
 }
 
 *, *:before, *:after {  
@@ -24,12 +21,14 @@ html {
 body {
     font-size: 16px;   /*1rem = 10px*/
     font-family: 'Krub', sans-serif;
-    margin: 0%;
-    padding: 0;
-    height: 100vh;
+    background-image: url(../img/hero2.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 html, body {
+    height: 100%;
+    width: 100%;
     margin: 0;
     padding: 0;
   }
@@ -50,32 +49,60 @@ h1, h2, h3, p {
     text-align: center;
 }
 
-.contenedor-main{
+
+
+.contenedor-main {
     height: 100vh;
-    position: relative;
-    display: grid;
-    grid-template-columns: 30% 40% 30%;
+    display: flex;
 }
 
-.contenedor-form{ /* FORMULARIO */
+@media (max-width: 480px) {
+    .contenedor-main {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    }
+}
+@media (min-width: 480px) {
+    .contenedor-main {
+        display: grid;
+        grid-template-columns:repeat(1, 25% 50% 25%) ;
+        grid-template-rows: 12.5% 75% 12.5%;
+        justify-items: center;
+        align-items: center;
+    }
+}
+
+.contenedor-alerta {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.form { /* CONTENEDOR FORM - FORM */
+    grid-row: 2 ;
     grid-column: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-}
-
-.form { 
-    background-color: var(--negro);
-    height: 50rem;
-    width: 45rem;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0);
+    width: 39rem;
     border: 2px solid white;
     border-radius: 2rem;
 }
-    
+
+@media (max-width: 480px) {
+    .form {
+        width: 93%;
+    }
+}
 .form fieldset {
     border: none;
-    margin: 0px 40px 
+    margin: 0px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .form legend{
@@ -144,12 +171,18 @@ h1, h2, h3, p {
 }
 
 .text-area {
-    width: 100%;
+    width: 35rem;
     border:none;
     margin-bottom: 2rem;
     padding: 1.5rem;
     border-radius: 1.5rem;
     background-color: var(--blanco);
+}
+
+@media (max-width: 480px) {
+    .text-area {
+    width: 32rem;
+    }
 }
 
 .bform{ /* BOTON FORMULARIO */
@@ -177,12 +210,28 @@ justify-content: center;
          width: auto;
     }
  }
-    
+
 .boton:hover{
     cursor: pointer;
 }
 
-.footer{
-    color: var(--blanco);
-    font-weight: 400;
+input#login.boton {
+    width: 100%;
+}
+
+.c-fot {
+grid-row: 3;
+grid-column: 2;
+height: 100%;
+color: var(--blanco);
+font-weight: 400;
+}
+
+@media (max-width: 480px) {
+    .c-fot {
+    height: 10%;
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    }
 }

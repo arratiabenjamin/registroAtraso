@@ -2,5 +2,8 @@
 
     namespace Controllers;
     use MVC\Router;
+    use Model\Apoderado;
 
-    class EstudianteController{}
+    class ApoderadoController{
+        
+    }

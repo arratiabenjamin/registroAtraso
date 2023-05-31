@@ -28,12 +28,17 @@
             //Proteger Rutas
             if(in_array($urlActual, $rutasProtegidas) && !$auth){
                 header('Location: /');
+            } else if($urlActual === '/' && $auth){
+                if($_SESSION['tipo'] === 'funcionario'){
+                    header('Location: /admin');
+                }else{
+                    header('Location: /apoderado');
+                }
             }
 
             //Guardar FuncAsoc
             if($metodo === 'GET'){
                 //Asignar Funcion Asociada a la Ruta Actual.
-                //Si no existe se asigna en null.
                 $fn = $this->rutasGET[$urlActual] ?? null;
             }else{
                 $fn = $this->rutasPOST[$urlActual] ?? null;
@@ -48,7 +53,7 @@
             }
         }
 
-        public function show($view, $datos, $login = false){
+        public function show($view, $datos, $login = false, $style = 'form'){
 
             foreach( $datos as $key => $value ){
                 $$key = $value;

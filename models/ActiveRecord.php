@@ -90,6 +90,12 @@
             $tabla = self::consultarSQL($query);
             return $tabla;
         }
+        //Recolectar Cantidad Especifica de Registros
+        public static function getLimit($limit){
+            $query = "SELECT * FROM " . static::$tabla . " LIMIT " . $limit;
+            $tabla = self::consultarSQL($query);
+            return $tabla;
+        }
         //Consultar DB
         public static function consultarSQL($query) {
             $tablas = self::$DB->query($query);

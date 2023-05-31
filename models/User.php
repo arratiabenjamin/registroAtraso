@@ -64,7 +64,7 @@
             $_SESSION['login'] = true;
 
             if($_SESSION['tipo'] === 'funcionario'){
-                header('Location: /atraso');
+                header('Location: /admin');
             }else{
                 header('Location: /apoderado');
             }
