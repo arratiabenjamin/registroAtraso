@@ -23,7 +23,7 @@
                     </div>
                 <?php endforeach; ?>
 
-            </div>    
+            </div>
 
             <form class="form" action="/" method="POST">
                 <fieldset>
