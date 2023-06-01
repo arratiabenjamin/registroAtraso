@@ -11,6 +11,6 @@
         public $rut_func;
 
         protected static $tabla = 'atrasos';
-        protected static $columnas = ['id_atraso', 'fecha_atraso', 'hora_atraso', 'rut_estudiante', 'rut_func'];
+        protected static $columnasDB = ['id_atraso', 'fecha_atraso', 'hora_atraso', 'rut_estudiante', 'rut_func'];
         
     }

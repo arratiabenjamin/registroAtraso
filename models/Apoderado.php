@@ -10,6 +10,6 @@
         public $password_apoderado;
 
         protected static $tabla = 'apoderados';
-        protected static $columnas = ['rut_apoderado', 'password_apoderado', 'nombre_apoderado', 'apellido_apoderado' ];
+        protected static $columnasDB = ['rut_apoderado', 'password_apoderado', 'nombre_apoderado', 'apellido_apoderado' ];
 
     }

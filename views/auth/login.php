@@ -17,17 +17,11 @@
             
             <div class="contenedor-alerta">
                 
-                <div class="alerta error">
-                    El Password es Obligatorio
-                </div>
-
-                <div class="alerta error">
-                    El Tipo de Usuario es Obligatorio
-                </div>
-
-                <div class="alerta error">
-                    El Rut es Obligatorio
-                </div>
+                <?php foreach($errores as $error): ?>
+                    <div class="alerta error">
+                        <?php echo $error; ?>
+                    </div>
+                <?php endforeach; ?>
 
             </div>    
 

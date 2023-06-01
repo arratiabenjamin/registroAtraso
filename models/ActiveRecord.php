@@ -96,6 +96,13 @@
             $tabla = self::consultarSQL($query);
             return $tabla;
         }
+        //Buscar un Registro Especifico
+        public static function findRecord($id){
+            echo static::$columnasDB;
+            $query = "SELECT * FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] . " = " . $id;
+            $tabla = self::consultarSQL($query);
+            return array_shift($tabla);
+        }
         //Consultar DB
         public static function consultarSQL($query) {
             $tablas = self::$DB->query($query);

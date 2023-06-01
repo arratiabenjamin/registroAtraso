@@ -31,7 +31,7 @@
             return static::$errores;
         }
         public function existeUsuario($rut){
-            $query = "SELECT * FROM " . static::$tabla . " WHERE " . static::$columnas[0] . " = '" . $this->rut . "' LIMIT 1";
+            $query = "SELECT * FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] . " = '" . $this->rut . "' LIMIT 1";
             $resultado = static::$DB->query($query);
 
             if(!$resultado->num_rows){

@@ -20,7 +20,12 @@
             $auth = $_SESSION['login'] ?? null;
 
             //Rutas Protegidas
-            $rutasProtegidas = ['/atrasos', '/apoderado'];
+            $rutasProtegidas = ['/admin', 
+                                '/admin/atrasos', '/admin/atraso/crear', '/admin/atraso/actualizar', '/admin/atraso/eliminar',
+                                '/admin/estudiantes', '/admin/estudiante/crear', '/admin/estudiante/actualizar', '/admin/estudiante/eliminar',
+                                '/admin/apoderados', '/admin/apoderado/crear', '/admin/apoderado/actualizar', '/admin/apoderado/eliminar',
+                                '/admin/funcionarios', '/admin/funcionario/crear', '/admin/funcionario/actualizar', '/admin/funcionario/eliminar',
+                                '/apoderado', '/apoderado/estudiante'];
 
             $urlActual = $_SERVER['PATH_INFO'] ?? '/';
             $metodo = $_SERVER['REQUEST_METHOD'];

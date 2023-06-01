@@ -36,6 +36,8 @@
                         $autenticacion = $auth->comprobarPassword($resultado);
 
                         if($autenticacion){
+                            session_start();
+                            $_SESSION['admin'] = Funcionario::findRecord($user['rut'])->admin_func;
                             $auth->autenticar();
                         }else{
                             if( $user['tipo'] === 'funcionario' ){
@@ -51,5 +53,11 @@
             $router->show( 'auth/login', [
                 'errores' => $errores
             ], 'login' );
+        }
+
+        public static function logout(Router $router){
+            session_start();
+            $_SESSION = [];
+            header('Location: /');
         }
     }

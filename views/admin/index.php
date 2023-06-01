@@ -1,12 +1,15 @@
 <header class="header">
     <h1 class="title"><span>@PECO</span>MPANY</h1>
+    <a href="/logout" class="boton">Logout</a>
 </header>
 
 <nav class="cont nav">
         <a href="/admin/atraso/crear" class="b1 boton" id="Atraso">Atraso</a>
-        <a href="/admin/alumno/crear" class="b2 boton" id="Alumno">Alumno</a>
-        <a href="/admin/apoderado/crear" class="b3 boton" id="Apoderado">Apoderado</a>
-        <a href="/admin/funcionario/crear" class="b4 boton" id="Funcionario">Funcionario</a>
+        <?php if($_SESSION['admin'] === '1'): ?>
+            <a href="/admin/alumno/crear" class="b2 boton" id="Alumno">Alumno</a>
+            <a href="/admin/apoderado/crear" class="b3 boton" id="Apoderado">Apoderado</a>
+            <a href="/admin/funcionario/crear" class="b4 boton" id="Funcionario">Funcionario</a>
+        <?php endif; ?>
 </nav>
 
 <main class="cont main">

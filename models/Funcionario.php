@@ -12,6 +12,6 @@
         public $admin_func;
         
         protected static $tabla = 'funcionarios';
-        protected static $columnas = ['rut_func', 'nombre_func', 'apellido_func', 'password_func', 'email_func', 'admin_func' ];
+        protected static $columnasDB = ['rut_func', 'nombre_func', 'apellido_func', 'password_func', 'email_func', 'admin_func' ];
         
     }
