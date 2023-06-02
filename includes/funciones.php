@@ -35,3 +35,8 @@
         
         return $msj;
     }
+
+    //PENDIENTE DE TERMINAR
+    function comprobacionUrl($url){
+        $id = $_GET['$id'] ?? null;
+    }

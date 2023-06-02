@@ -31,10 +31,10 @@
         }
         public function crear(){
             $atributos = $this->sanitizarAtributos();
-            $keys = join(' ,', array_keys($atributos));
-            $values = join(' ,', array_values($atributos));
+            $keys = join(', ', array_keys($atributos));
+            $values = join("', '", array_values($atributos));
 
-            $query = "INSERT INTO" . static::$tabla . " ( " . $keys . " ) VALUES ( ' " . $values . " ' )";
+            $query = "INSERT INTO " . static::$tabla . " ( " . $keys . " ) VALUES ( ' " . $values . " ' )";
             $resultado = self::$DB->query($query);
             if($resultado){
                 header('Location: /');
@@ -69,7 +69,7 @@
         public function atributos(){
             $atributos = [];
             foreach( static::$columnasDB as $columna ){
-                if($columna === 'id')continue;
+                if($columna === 'id_atraso')continue;
                 $atributos[$columna] = $this->$columna;
             }
             return $atributos;
@@ -129,7 +129,7 @@
 
         public function sincronizar($args = []) {
             foreach($args as $key => $value){
-                //Si las propiedades Existen y 
+                //Si las propiedades Existen y valor no es nulo - El atributo tendra como valor "$value".
                 if(property_exists($this, $key) && !is_null($value)) {
                     $this->$key = $value;
                 }

@@ -10,10 +10,11 @@
     class FuncionarioController{
 
         public static function index(Router $router){
-            $atrasos = Atraso::getLimit(3) ?? null;
-            $estudiantes = Estudiante::getLimit(3) ?? null;
-            $apoderados = Apoderado::getLimit(3) ?? null;
-            $funcionarios = Funcionario::getLimit(3) ?? null;
+            
+            $atrasos = Atraso::getLimit(5) ?? null;
+            $estudiantes = Estudiante::getLimit(5) ?? null;
+            $apoderados = Apoderado::getLimit(5) ?? null;
+            $funcionarios = Funcionario::getLimit(5) ?? null;
             $resultado = $_GET['resultado'] ?? null;
 
             $router->show( '/admin/index', [
