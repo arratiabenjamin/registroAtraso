@@ -3,5 +3,4 @@ src/
 /vendor/
 MF.mwb
 MF.mwb.bak
-DML.sql
 composer.lock
