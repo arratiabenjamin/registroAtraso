@@ -107,10 +107,29 @@ margin: 0 auto;
   cursor: pointer;
 }
 
-.main {
+/*.main {
   padding: 0 10%;
   margin: 0px auto 0;
   height: 100%;
+} */
+
+.main {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 25% 25%;
+}
+
+#atraso {
+
+}
+#estudiante {
+
+}
+#apoderado {
+
+}
+#funcionario {
+
 }
 
 .tab-title {
@@ -120,7 +139,8 @@ margin: 0 auto;
 }
 
 .table{
-width: 100%;
+width: 48rem;
+height: 11rem;
 border-collapse: collapse;
 }
 

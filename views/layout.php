@@ -8,7 +8,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Krub:wght@200;400;700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="../css/<?php echo $style;?>.css">
+        <link rel="stylesheet" href="<?php echo $style;?>.css">
     </head>
 
     <body>

@@ -1,16 +1,43 @@
 <main>
-    <h1>Atrasos</h1>
+<table class="table">
+
+<h2 class="tab-title" >Atrasos</h2>
+<thead class="Atraso b1 ">
+    <tr> 
+        <th>ID</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Rut Estudiante</th>
+        <th>Rut Funcionario</th>
+    </tr>
+</thead>
+<tbody>
     <?php foreach($atrasos as $atraso): ?>
-        <h3>Id</h3>
-        <p> <?php echo $atraso->id_atraso; ?> </p>
-        <h3>Fecha</h3>
-        <p> <?php echo $atraso->fecha_atraso; ?> </p>
-        <h3>Hora</h3>
-        <p> <?php echo $atraso->hora_atraso; ?> </p>
-        <h3>Rut Estudiante</h3>
-        <p> <?php echo $atraso->rutEstudiante_atraso; ?> </p>
-        <h3>Rut Funcionario</h3>
-        <p> <?php echo $atraso->rutFuncionario_atraso; ?> </p>
-        <h2>----------------------------------</h2>
+        <tr>
+            <td><?php echo $atraso->id_atraso ?></td>
+            <td><?php echo $atraso->fecha_atraso ?></td>
+            <td><?php echo $atraso->hora_atraso ?></td>
+            <td><?php echo $atraso->rut_estudiante ?></td>
+            <td><?php echo $atraso->rut_func ?></td>
+        </tr>
     <?php endforeach; ?>
+</tbody>
+</table>
+
+<div class="formulario">
+    <h1>Ingreso Rut</h1>
+    <form action="/admin/atraso/crear" method="POST">
+        <div class="ingresorut">
+            <input type="text" id="rut" name="atraso[rut_estudiante]">
+            <label for="rut">Ingrese rut estudiante</label>
+        </div>
+        <?php 
+            session_start();
+        ?>
+        <input type="hidden" value="<?php echo $_SESSION['usuario'];?>" name="atraso[rut_func]">
+        <div class="enviar">
+            <input type="submit" value="Enviar">
+        </div>
+    </form>
+</div>
 </main>
