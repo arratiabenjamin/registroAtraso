@@ -33,6 +33,12 @@ CREATE TABLE IF NOT EXISTS `registroAtraso`.`funcionarios` (
   PRIMARY KEY (`rut_func`))
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- INSERTS `registroAtraso`.`Funcionarios`
+-- -----------------------------------------------------
+INSERT INTO `funcionarios`
+VALUES ("12345678-9", "Benjamin", "Arratia", "email@email.com", "$2y$10$Xm5IsK9JoC34Vt2Yc.JGYOVDJ9s9qQ85fAUvL0kkR425Ly1/TjkGO", 1),
+("12345678-0", "Alejandro", "Arratia", "correo@correo.com", "$2y$10$Xm5IsK9JoC34Vt2Yc.JGYOVDJ9s9qQ85fAUvL0kkR425Ly1/TjkGO", 0);
 
 -- -----------------------------------------------------
 -- Table `registroAtraso`.`Apoderado`
