@@ -23,7 +23,7 @@
                 'apoderados' => $apoderados,
                 'funcionarios' => $funcionarios,
                 'resultado' => $resultado
-            ], false, 'admin' );
+            ], 'admin' );
         }
 
         public static function atrasos(Router $router){

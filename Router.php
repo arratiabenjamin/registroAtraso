@@ -58,7 +58,7 @@
             }
         }
 
-        public function show($view, $datos, $login = false, $style = 'form'){
+        public function show($view, $datos, $style = '', $login = false){
 
             foreach( $datos as $key => $value ){
                 $$key = $value;
