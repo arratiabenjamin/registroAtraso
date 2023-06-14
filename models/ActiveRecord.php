@@ -23,10 +23,10 @@
         //CRUD
         public function guardar(){
             //Si no hay id o mejor dicho es Nulo significa que se actualiza
-            if(!is_null($this->id)){
-                $this->guardar();
-            } else {
+            if(is_null($this->id_atraso) || is_null($this->rut_apoderado) || is_null($this->rut_estudiante) || is_null($this->rut_func)){
                 $this->crear();
+            } else {
+                $this->actualizar();
             }
         }
         public function crear(){
@@ -98,8 +98,7 @@
         }
         //Buscar un Registro Especifico
         public static function findRecord($id){
-            echo static::$columnasDB;
-            $query = "SELECT * FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] . " = " . $id;
+            $query = "SELECT * FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] . " = '" . $id . "';";
             $tabla = self::consultarSQL($query);
             return array_shift($tabla);
         }

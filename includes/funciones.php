@@ -36,6 +36,8 @@
         return $msj;
     }
 
+    function validarEntidad($entidad){}
+
     //PENDIENTE DE TERMINAR
     function comprobacionUrl($url){
         $id = $_GET['$id'] ?? null;
