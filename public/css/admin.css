@@ -44,8 +44,11 @@ html, body {
 }
 
 .title {
-color: var(--primario);
-margin-left: 13rem;
+  color: var(--primario);
+  margin-left: 13rem;
+  font-weight: 500;
+  font-size: 2.8rem;
+  text-decoration: none;
 }
 
 .title span {

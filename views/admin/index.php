@@ -1,8 +1,3 @@
-<header class="header">
-    <h1 class="title"><span>@PECO</span>MPANY</h1>
-    <a href="/logout" class="boton">Logout</a>
-</header>
-
 <nav class="cont nav">
         <?php if($_SESSION['admin'] === '1'){ ?>
             <a href="/admin/atrasos" class="b1 boton" id="Atraso">Atraso</a>
@@ -25,6 +20,7 @@
                 <th>Hora</th>
                 <th>Rut Estudiante</th>
                 <th>Rut Funcionario</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -35,6 +31,14 @@
                     <td><?php echo $atraso->hora_atraso ?></td>
                     <td><?php echo $atraso->rut_estudiante ?></td>
                     <td><?php echo $atraso->rut_func ?></td>
+                    <td>
+                        <form method="POST" class="w-100" action="admin/atraso/eliminar">
+                            <input type="hidden" name="id" value="<?php echo $atraso->id_atraso; ?>">
+                            <input type="hidden" name="entidad" value="atraso">
+                            <input type="submit" class="boton-rojo-block" value="Eliminar">
+                        </form>
+                        <a href="/admin/atraso/actualizar?id=<?php echo $atraso->id_atraso; ?>" class="boton-verde-block">Actualizar</a>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

@@ -50,7 +50,7 @@
 
             }
             
-            $router->show('admin/atraso/actualizar', [
+            $router->show('admin/atrasos/actualizar', [
                 'atraso' => $atraso,
                 'errores' => $errores
             ], '../../css/formularioAtraso');
@@ -66,7 +66,7 @@
                     $entidad = $_POST['entidad'];
                     if(validarEntidad($entidad)){
                         $entidad = Atraso::findRecord($idEntidad);
-                        $entidad->eliminar();
+                        $entidad->eliminar($entidad->id_atraso);
                     }
                 }
             }

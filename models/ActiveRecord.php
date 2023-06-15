@@ -23,10 +23,14 @@
         //CRUD
         public function guardar(){
             //Si no hay id o mejor dicho es Nulo significa que se actualiza
-            if(is_null($this->id_atraso) || is_null($this->rut_apoderado) || is_null($this->rut_estudiante) || is_null($this->rut_func)){
+            $backupRutFunc = $this->rut_func;
+            $this->rut_func = null;
+            debugear($this->rut_func);
+            if(is_null($this->id_atraso) && is_null($this->rut_apoderado) && is_null($this->rut_estudiante) && is_null($this->rut_func)){
+                $this->rut_func = $backupRutFunc;
                 $this->crear();
             } else {
-                $this->actualizar();
+                $this->actualizar($this->id_atraso);
             }
         }
         public function crear(){
@@ -37,27 +41,29 @@
             $query = "INSERT INTO " . static::$tabla . " ( " . $keys . " ) VALUES ( ' " . $values . " ' )";
             $resultado = self::$DB->query($query);
             if($resultado){
-                header('Location: /');
+                header('Location: /admin');
             }
         }
-        public function actualizar(){
+        public function actualizar($id){
             //Sanitizar
             $atributos = $this->sanitizarAtributos();
             $values = [];
 
+            debugear( $this->id_atraso ?? $this->rut_func ?? 2 );
+
             foreach($atributos as $key => $value){
                 $values[] = "$key = '$value'";
             }
-            $query = "UPDATE " . static::$tabla . " SET " . join(' ,', $values) . " WHERE id = $this->id LIMIT 1";
+            $query = "UPDATE " . static::$tabla . " SET " . join(' ,', $values) . " WHERE " . static::$columnasDB[0] . " = " . $this->id . " LIMIT 1";
             $resultado = self::$DB->query($query);
 
             if($resultado){
-                header('Location: /');
+                header('Location: /admin');
             }
 
         }
-        public function eliminar(){
-            $query = "DELETE FROM" . static::$tabla . "WHERE id = " . self::$DB->escape_string($this->id) . " LIMIT 1";
+        public function eliminar($id){
+            $query = "DELETE FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] .  " = " . self::$DB->escape_string($id) . " LIMIT 1";
             $resultado = self::$DB->query($query);
 
             if($resultado){
