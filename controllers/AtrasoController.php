@@ -36,7 +36,7 @@
 
         public static function actualizar(Router $router){
 
-            $atraso = Atraso::findRecord($_GET['id']);
+            $atraso = Atraso::findRecord($_GET['id']) ?? Atraso::findRecord($_POST['id']);
             $errores = Atraso::getErrores();
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -45,7 +45,7 @@
                 $errores = $atraso->validar();
 
                 if (empty($errores)) {
-                    $atraso->guardar();
+                    $atraso->guardar($_POST['id']);
                 }
 
             }

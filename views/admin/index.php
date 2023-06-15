@@ -55,6 +55,7 @@
                     <th>Apellido</th>
                     <th>Curso</th>
                     <th>Rut Apoderado</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -65,6 +66,14 @@
                         <td><?php echo $estudiante->apellidos_estudiante ?></td>
                         <td><?php echo $estudiante->curso_estudiante ?></td>
                         <td><?php echo $estudiante->rut_apoderado ?></td>
+                        <td>
+                            <form method="POST" class="w-100" action="admin/estudiante/eliminar">
+                                <input type="hidden" name="id" value="<?php echo $estudiante->rut_estudiante; ?>">
+                                <input type="hidden" name="entidad" value="estudiante">
+                                <input type="submit" class="boton-rojo-block" value="Eliminar">
+                            </form>
+                            <a href="/admin/estudiante/actualizar?id=<?php echo $estudiante->rut_estudiante; ?>" class="boton-verde-block">Actualizar</a>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

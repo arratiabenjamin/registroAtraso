@@ -6,15 +6,12 @@
                 <?php echo $error; ?>
             </div>
         <?php endforeach; ?>
-        <form action="/admin/atraso/crear" method="POST">
+        <form action="/admin/atraso/actualizar" method="POST">
             <div class="ingresorut">
                 <input type="text" id="rut" name="atraso[rut_estudiante]" value="<?php echo $atraso->rut_estudiante?>">
                 <label for="rut">Ingrese rut estudiante</label>
             </div>
-            <?php 
-                session_start();
-            ?>
-            <input type="hidden" value="<?php echo $_SESSION['usuario'];?>" name="atraso[rut_func]">
+            <input type="hidden" name="id" value="<?php echo $atraso->id_atraso;?>">
             <div class="enviar">
                 <input type="submit" value="Enviar">
             </div>

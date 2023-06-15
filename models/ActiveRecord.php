@@ -21,16 +21,12 @@
         }
 
         //CRUD
-        public function guardar(){
+        public function guardar($id = null){
             //Si no hay id o mejor dicho es Nulo significa que se actualiza
-            $backupRutFunc = $this->rut_func;
-            $this->rut_func = null;
-            debugear($this->rut_func);
-            if(is_null($this->id_atraso) && is_null($this->rut_apoderado) && is_null($this->rut_estudiante) && is_null($this->rut_func)){
-                $this->rut_func = $backupRutFunc;
+            if(is_null($id)){
                 $this->crear();
             } else {
-                $this->actualizar($this->id_atraso);
+                $this->actualizar($id);
             }
         }
         public function crear(){
@@ -49,12 +45,10 @@
             $atributos = $this->sanitizarAtributos();
             $values = [];
 
-            debugear( $this->id_atraso ?? $this->rut_func ?? 2 );
-
             foreach($atributos as $key => $value){
                 $values[] = "$key = '$value'";
             }
-            $query = "UPDATE " . static::$tabla . " SET " . join(' ,', $values) . " WHERE " . static::$columnasDB[0] . " = " . $this->id . " LIMIT 1";
+            $query = "UPDATE " . static::$tabla . " SET " . join(' ,', $values) . " WHERE " . static::$columnasDB[0] . " = " . $id . " LIMIT 1";
             $resultado = self::$DB->query($query);
 
             if($resultado){
@@ -63,7 +57,17 @@
 
         }
         public function eliminar($id){
-            $query = "DELETE FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] .  " = " . self::$DB->escape_string($id) . " LIMIT 1";
+            if (strpos($id, "-")) {
+                if(static::$tabla === 'estudiantes'){
+                    $atrasos = Atraso::findRecordColumnEspecific('rut_estudiante', $this->rut_estudiante);
+                    foreach($atrasos as $atraso){
+                        $atraso->eliminar($atraso->id_atraso);
+                    }
+                }
+                $query = "DELETE FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] .  " = '" . self::$DB->escape_string($id) . "' LIMIT 1";
+            } else {
+                $query = "DELETE FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] .  " = " . self::$DB->escape_string($id) . " LIMIT 1";
+            }
             $resultado = self::$DB->query($query);
 
             if($resultado){
@@ -107,6 +111,12 @@
             $query = "SELECT * FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] . " = '" . $id . "';";
             $tabla = self::consultarSQL($query);
             return array_shift($tabla);
+        }
+        //Buscar un Registro Especifico por Columna
+        public static function findRecordColumnEspecific($column, $id){
+            $query = "SELECT * FROM " . static::$tabla . " WHERE " . $column . " = '" . $id . "';";
+            $tabla = self::consultarSQL($query);
+            return $tabla;
         }
         //Consultar DB
         public static function consultarSQL($query) {
