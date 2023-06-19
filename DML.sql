@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `registroAtraso`.`apoderados` (
   `nombre_apoderado` VARCHAR(25) NOT NULL,
   `apellido_apoderado` VARCHAR(45) NOT NULL,
   `rut_apoderado` VARCHAR(14) NOT NULL,
-  `password_apoderado` VARCHAR(45) NOT NULL,
+  `password_apoderado` VARCHAR(60) NOT NULL,
   PRIMARY KEY (`rut_apoderado`))
 ENGINE = InnoDB;
 
@@ -81,19 +81,18 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `registroAtraso`.`atrasos` ;
 
 CREATE TABLE IF NOT EXISTS `registroAtraso`.`atrasos` (
-  `id_atraso` INT NOT NULL,
+  `id_atraso` INT NOT NULL AUTO_INCREMENT,
   `fecha_atraso` DATE NOT NULL,
-  `hora_atraso` DATETIME NOT NULL,
+  `hora_atraso` TIME NOT NULL,
   `rut_estudiante` VARCHAR(14) NULL,
   `rut_func` VARCHAR(14) NOT NULL,
   PRIMARY KEY (`id_atraso`, `rut_func`),
   INDEX `fk_Atraso_Funcionario_idx` (`rut_func` ASC) VISIBLE,
   INDEX `fk_Atraso_Estudiante_idx` (`rut_estudiante` ASC) VISIBLE,
-  CONSTRAINT `fk_Atraso_Funcionario`
-    FOREIGN KEY (`rut_func`)
-    REFERENCES `registroAtraso`.`funcionarios` (`rut_func`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+  FOREIGN KEY (`rut_func`)
+  REFERENCES `registroAtraso`.`funcionarios` (`rut_func`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
   CONSTRAINT `fk_Atraso_Estudiante`
     FOREIGN KEY (`rut_estudiante`)
     REFERENCES `registroAtraso`.`estudiantes` (`rut_estudiante`)
