@@ -60,18 +60,29 @@ use DateTime;
 
         }
         public function eliminar($id){
+            $resultado = true;
             if (strpos($id, "-")) {
                 if(static::$tabla === 'estudiantes'){
                     $atrasos = Atraso::findRecordColumnEspecific('rut_estudiante', $this->rut_estudiante);
                     foreach($atrasos as $atraso){
                         $atraso->eliminar($atraso->id_atraso);
                     }
+                } else if(static::$tabla === 'apoderados'){
+                    $estudiantes = Estudiante::findRecordColumnEspecific('rut_apoderado', $this->rut_apoderado);
+                    foreach($estudiantes as $estudiante){
+                        $atrasos = Atraso::findRecordColumnEspecific('rut_estudiante', $estudiante->rut_estudiante);
+                        foreach($atrasos as $atraso){
+                            $atraso->eliminar($atraso->id_atraso);
+                        }
+                        $estudiante->eliminar($estudiante->rut_estudiante);
+                    }
                 }
-                $query = "DELETE FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] .  " = '" . self::$DB->escape_string($id) . "' LIMIT 1";
             } else {
                 $query = "DELETE FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] .  " = " . self::$DB->escape_string($id) . " LIMIT 1";
             }
-            $resultado = self::$DB->query($query);
+            if($this->admin_func != '1'){
+                $resultado = self::$DB->query($query);
+            }
 
             if($resultado){
                 header('Location: /');

@@ -57,7 +57,7 @@
 
         }
 
-        public static function eliminar(Router $router){
+        public static function eliminar(){
             if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 $idEntidad = $_POST['id'];
                 //Validar ID

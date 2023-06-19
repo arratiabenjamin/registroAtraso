@@ -46,7 +46,7 @@
             $user = $resultado->fetch_object();
 
             if($user->password_func){
-                $auth = password_verify($this->password, $user->password_func);
+                $auth = password_verify($this->password_func, $user->password_func);
             } else {
                 $auth = password_verify($this->password, $user->password_apoderado);
             }

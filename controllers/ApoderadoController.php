@@ -42,4 +42,42 @@ use Model\Estudiante;
             ], '../../css/' );
 
         }
+
+        public static function actualizar(Router $router){
+
+            $apoderado = Apoderado::findRecord($_GET['id']) ?? Apoderado::findRecord($_POST['id']);
+            $errores = Apoderado::getErrores();
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $args = $_POST['apoderado'];
+                $apoderado->sincronizar($args);
+                $errores = $apoderado->validar();
+
+                if (empty($errores)) {
+                    $apoderado->guardar($_POST['id']);
+                }
+
+            }
+            
+            $router->show('admin/apoderados/actualizar', [
+                'apoderado' => $apoderado,
+                'errores' => $errores
+            ], '../../css/formularioapoderado');
+
+        }
+
+        public static function eliminar(){
+            if($_SERVER['REQUEST_METHOD'] === 'POST'){
+                $idEntidad = $_POST['id'];
+                //Validar ID
+
+                if($idEntidad){
+                    $entidad = $_POST['entidad'];
+                    if(validarEntidad($entidad)){
+                        $entidad = Apoderado::findRecord($idEntidad);
+                        $entidad->eliminar($entidad->rut_apoderado);
+                    }
+                }
+            }
+        }
     }

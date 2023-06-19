@@ -86,6 +86,7 @@
                     <th>Rut</th>
                     <th>Nombre</th>
                     <th>Apellido</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -94,6 +95,14 @@
                         <td><?php echo $apoderado->rut_apoderado ?></td>
                         <td><?php echo $apoderado->nombre_apoderado ?></td>
                         <td><?php echo $apoderado->apellido_apoderado ?></td>
+                        <td>
+                            <form method="POST" class="w-100" action="admin/apoderado/eliminar">
+                                <input type="hidden" name="id" value="<?php echo $apoderado->rut_apoderado; ?>">
+                                <input type="hidden" name="entidad" value="apoderado">
+                                <input type="submit" class="boton-rojo-block" value="Eliminar">
+                            </form>
+                            <a href="/admin/apoderado/actualizar?id=<?php echo $apoderado->rut_apoderado; ?>" class="boton-verde-block">Actualizar</a>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -107,6 +116,7 @@
                     <th>Nombre</th>
                     <th>Apellido</th>
                     <th>Email</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -116,6 +126,14 @@
                         <td><?php echo $funcionario->nombre_func ?></td>
                         <td><?php echo $funcionario->apellido_func ?></td>
                         <td><?php echo $funcionario->email_func ?></td>
+                        <td>
+                            <form method="POST" class="w-100" action="admin/funcionario/eliminar">
+                                <input type="hidden" name="id" value="<?php echo $funcionario->rut_func; ?>">
+                                <input type="hidden" name="entidad" value="funcionario">
+                                <input type="submit" class="boton-rojo-block" value="Eliminar">
+                            </form>
+                            <a href="/admin/funcionario/actualizar?id=<?php echo $funcionario->rut_func; ?>" class="boton-verde-block">Actualizar</a>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
