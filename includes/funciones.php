@@ -36,6 +36,11 @@
         return $msj;
     }
 
+    function validarEntidad($entidad){
+        $entidades = ['atraso', 'estudiante', 'apoderado', 'funcionario'];
+        return in_array($entidad, $entidades);
+    }
+
     //PENDIENTE DE TERMINAR
     function comprobacionUrl($url){
         $id = $_GET['$id'] ?? null;

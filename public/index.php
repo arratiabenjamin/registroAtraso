@@ -23,6 +23,9 @@
     $router->get('/admin/apoderados', [FuncionarioController::class, 'apoderados']);
     $router->get('/admin/funcionarios', [FuncionarioController::class, 'funcionarios']);
 
+    //Apoderado
+    $router->get('/apoderado', [ApoderadoController::class, 'index']);
+
     //ModificarEntidades
     //Atrasos
     $router->get('/admin/atraso/crear', [AtrasoController::class, 'crear']);

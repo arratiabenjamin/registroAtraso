@@ -2,6 +2,8 @@
 
     namespace Model;
 
+use DateTime;
+
     class ActiveRecord{
 
         //Statics Vars
@@ -21,12 +23,12 @@
         }
 
         //CRUD
-        public function guardar(){
+        public function guardar($id = null){
             //Si no hay id o mejor dicho es Nulo significa que se actualiza
-            if(!is_null($this->id)){
-                $this->guardar();
-            } else {
+            if(is_null($id)){
                 $this->crear();
+            } else {
+                $this->actualizar($id);
             }
         }
         public function crear(){
@@ -35,12 +37,13 @@
             $values = join("', '", array_values($atributos));
 
             $query = "INSERT INTO " . static::$tabla . " ( " . $keys . " ) VALUES ( ' " . $values . " ' )";
+            // debugear($query);
             $resultado = self::$DB->query($query);
             if($resultado){
-                header('Location: /');
+                header('Location: /admin');
             }
         }
-        public function actualizar(){
+        public function actualizar($id){
             //Sanitizar
             $atributos = $this->sanitizarAtributos();
             $values = [];
@@ -48,17 +51,38 @@
             foreach($atributos as $key => $value){
                 $values[] = "$key = '$value'";
             }
-            $query = "UPDATE " . static::$tabla . " SET " . join(' ,', $values) . " WHERE id = $this->id LIMIT 1";
+            $query = "UPDATE " . static::$tabla . " SET " . join(' ,', $values) . " WHERE " . static::$columnasDB[0] . " = " . $id . " LIMIT 1";
             $resultado = self::$DB->query($query);
 
             if($resultado){
-                header('Location: /');
+                header('Location: /admin');
             }
 
         }
-        public function eliminar(){
-            $query = "DELETE FROM" . static::$tabla . "WHERE id = " . self::$DB->escape_string($this->id) . " LIMIT 1";
-            $resultado = self::$DB->query($query);
+        public function eliminar($id){
+            $resultado = true;
+            if (strpos($id, "-")) {
+                if(static::$tabla === 'estudiantes'){
+                    $atrasos = Atraso::findRecordColumnEspecific('rut_estudiante', $this->rut_estudiante);
+                    foreach($atrasos as $atraso){
+                        $atraso->eliminar($atraso->id_atraso);
+                    }
+                } else if(static::$tabla === 'apoderados'){
+                    $estudiantes = Estudiante::findRecordColumnEspecific('rut_apoderado', $this->rut_apoderado);
+                    foreach($estudiantes as $estudiante){
+                        $atrasos = Atraso::findRecordColumnEspecific('rut_estudiante', $estudiante->rut_estudiante);
+                        foreach($atrasos as $atraso){
+                            $atraso->eliminar($atraso->id_atraso);
+                        }
+                        $estudiante->eliminar($estudiante->rut_estudiante);
+                    }
+                }
+            } else {
+                $query = "DELETE FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] .  " = " . self::$DB->escape_string($id) . " LIMIT 1";
+            }
+            if($this->admin_func != '1'){
+                $resultado = self::$DB->query($query);
+            }
 
             if($resultado){
                 header('Location: /');
@@ -98,10 +122,15 @@
         }
         //Buscar un Registro Especifico
         public static function findRecord($id){
-            echo static::$columnasDB;
-            $query = "SELECT * FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] . " = " . $id;
+            $query = "SELECT * FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] . " = '" . $id . "';";
             $tabla = self::consultarSQL($query);
             return array_shift($tabla);
+        }
+        //Buscar un Registro Especifico por Columna
+        public static function findRecordColumnEspecific($column, $id){
+            $query = "SELECT * FROM " . static::$tabla . " WHERE " . $column . " = '" . $id . "';";
+            $tabla = self::consultarSQL($query);
+            return $tabla;
         }
         //Consultar DB
         public static function consultarSQL($query) {

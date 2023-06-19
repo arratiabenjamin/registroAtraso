@@ -58,19 +58,19 @@
             }
         }
 
-        public function show($view, $datos, $login = false, $style = 'form'){
+        public function show($view, $datos, $style = '', $login = false){
 
             foreach( $datos as $key => $value ){
                 $$key = $value;
+            }
+            // $contenido = ob_get_clean(); //PRODUCE ERRORES - NO ENCONTRADA SU SOLUCION
+            if(!$login){
+                include_once __DIR__ . "/views/layout.php";
             }
             
             // ob_start(); //PRODUCE ERRORES - NO ENCONTRADA SU SOLUCION
             include_once __DIR__ . "/views/$view.php";
 
-            // $contenido = ob_get_clean(); //PRODUCE ERRORES - NO ENCONTRADA SU SOLUCION
-            if(!$login){
-                include_once __DIR__ . "/views/layout.php";
-            }
 
         }
     }

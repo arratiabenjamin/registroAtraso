@@ -23,7 +23,67 @@
                 'apoderados' => $apoderados,
                 'funcionarios' => $funcionarios,
                 'resultado' => $resultado
-            ], false, 'admin' );
+            ], '../css/admin' );
+        }
+
+        public static function crear(Router $router){
+
+            $funcionario = new Funcionario();
+            $errores = Funcionario::getErrores();
+
+            if($_SERVER['REQUEST_METHOD'] === 'POST'){
+                $_POST['funcionario']['password_func'] = password_hash($_POST['password_func'], PASSWORD_DEFAULT);
+                $funcionario = new Funcionario($_POST['funcionario']);
+                $errores = $funcionario->validar();
+                if(empty($errores)){
+                    $funcionario->guardar();
+                }
+
+            }
+
+            $router->show( '/admin/funcionarios/crear', [
+                'funcionario' => $funcionario,
+                'errores' => $errores
+            ], '../../css/' );
+
+        }
+
+        public static function actualizar(Router $router){
+
+            $funcionario = Funcionario::findRecord($_GET['id']) ?? Funcionario::findRecord($_POST['id']);
+            $errores = Funcionario::getErrores();
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $args = $_POST['funcionario'];
+                $funcionario->sincronizar($args);
+                $errores = $funcionario->validar();
+
+                if (empty($errores)) {
+                    $funcionario->guardar($_POST['id']);
+                }
+
+            }
+            
+            $router->show('admin/funcionarios/actualizar', [
+                'funcionario' => $funcionario,
+                'errores' => $errores
+            ], '../../css/formulariofuncionario');
+
+        }
+
+        public static function eliminar(){
+            if($_SERVER['REQUEST_METHOD'] === 'POST'){
+                $idEntidad = $_POST['id'];
+                //Validar ID
+
+                if($idEntidad){
+                    $entidad = $_POST['entidad'];
+                    if(validarEntidad($entidad)){
+                        $entidad = Funcionario::findRecord($idEntidad);
+                        $entidad->eliminar($entidad->rut_func);
+                    }
+                }
+            }
         }
 
         public static function atrasos(Router $router){

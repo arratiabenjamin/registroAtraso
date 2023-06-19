@@ -14,16 +14,33 @@
             if( $_SERVER['REQUEST_METHOD'] === 'POST' ){
                 $user = $_POST;
                 if( $user['tipo'] === 'funcionario' ){
+                    $rut = $user['rut'];
+                    $password = $user['password'];
+                    $user = [];
+                    $user['tipo'] = 'funcionario';
+                    $user['rut_func'] = $rut;
+                    $user['nombre_func'] = ' ';
+                    $user['apellido_func'] = ' ';
+                    $user['password_func'] = $password;
+                    $user['email_func'] = ' ';
+                    $user['admin_func'] = ' ';
                     $auth = new Funcionario($user);
                 }else{
+                    $rut = $user['rut'];
+                    $password = $user['password'];
+                    $user = [];
+                    $user['rut_apoderado'] = $rut;
+                    $user['nombre_apoderado'] = ' ';
+                    $user['apellido_apoderado'] = ' ';
+                    $user['password_apoderado'] = $password;
                     $auth = new Apoderado($user);
                 }
 
                 $errores = $auth->validar();
 
                 if(empty($errores)){
-
-                    $resultado = $auth->existeUsuario($user['tipo']);
+                    
+                    $resultado = $auth->existeUsuario($user['rut_func'] ?? $user['rut_apoderado']);
 
                     if(!$resultado){
                         if( $user['tipo'] === 'funcionario' ){
@@ -37,7 +54,7 @@
 
                         if($autenticacion){
                             session_start();
-                            $_SESSION['admin'] = Funcionario::findRecord($user['rut'])->admin_func;
+                            $_SESSION['admin'] = Funcionario::findRecord($user['rut_func'])->admin_func;
                             $auth->autenticar();
                         }else{
                             if( $user['tipo'] === 'funcionario' ){
@@ -52,7 +69,7 @@
 
             $router->show( 'auth/login', [
                 'errores' => $errores
-            ], 'login' );
+            ], '../css/login', true );
         }
 
         public static function logout(Router $router){

@@ -2,6 +2,8 @@
 
     namespace Model;
 
+use DateTime;
+
     class Atraso extends ActiveRecord{
         
         public $id_atraso;
@@ -16,15 +18,18 @@
         public function __construct($args = [])
         {
             $this->id_atraso = $args['id'] ?? null;
-            $this->fecha_atraso = $args['fecha_atraso'] ?? date('Ymd');
-            $this->hora_atraso = $args['hora_atraso'] ?? date('H:m');
+            $this->fecha_atraso = $args['fecha'] ?? null;
+            $this->hora_atraso = $args['hora'] ?? null;
             $this->rut_estudiante = $args['rut_estudiante'] ?? null;
             $this->rut_func = $args['rut_func'] ?? null;
         }
 
         public function validar(){
             if(!$this->rut_estudiante){
-                self::$errores[] = 'El rut del Alumno es Obligatorio';
+                self::$errores[] = 'El rut del Alumno es Obligatorio.';
+            }
+            if(!Estudiante::findRecord($this->rut_estudiante)){
+                self::$errores[] = 'Rut Inexistente.';
             }
 
             return self::$errores;
