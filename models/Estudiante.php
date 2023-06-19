@@ -22,20 +22,20 @@
         }
 
         public function validar(){
-            if(!$this->rut_apoderado){
-                self::$errores[] = 'El Rut del Alumno es Obligatorio.';
+            if(!$this->rut_estudiante){
+                self::$errores[] = 'El Rut del Estudiante es Obligatorio.';
             }
             if(!$this->rut_apoderado){
                 self::$errores[] = 'El Rut del Apoderado es Obligatorio.';
             }
             if(!$this->nombres_estudiante){
-                self::$errores[] = 'El Nombre del Alumno es Obligatorio.';
+                self::$errores[] = 'El Nombre del Estudiante es Obligatorio.';
             }
             if(!$this->apellidos_estudiante){
-                self::$errores[] = 'El Apellido del Alumno es Obligatorio.';
+                self::$errores[] = 'El Apellido del Estudiante es Obligatorio.';
             }
             if(!$this->curso_estudiante){
-                self::$errores[] = 'El Curso del Alumno es Obligatorio.';
+                self::$errores[] = 'El Curso del Estudiante es Obligatorio.';
             }
             if(!Apoderado::findRecord($this->rut_apoderado)){
                 self::$errores[] = 'Rut Inexistente.';

@@ -2,6 +2,8 @@
 
     namespace Model;
 
+use DateTime;
+
     class ActiveRecord{
 
         //Statics Vars
@@ -35,6 +37,7 @@
             $values = join("', '", array_values($atributos));
 
             $query = "INSERT INTO " . static::$tabla . " ( " . $keys . " ) VALUES ( ' " . $values . " ' )";
+            // debugear($query);
             $resultado = self::$DB->query($query);
             if($resultado){
                 header('Location: /admin');

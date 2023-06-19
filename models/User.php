@@ -31,7 +31,7 @@
             return static::$errores;
         }
         public function existeUsuario($rut){
-            $query = "SELECT * FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] . " = '" . $this->rut . "' LIMIT 1";
+            $query = "SELECT * FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] . " = '" . $rut . "' LIMIT 1";
             $resultado = static::$DB->query($query);
 
             if(!$resultado->num_rows){
@@ -59,7 +59,7 @@
         }
         public function autenticar(){
             session_start();
-            $_SESSION['usuario'] = $this->rut;
+            $_SESSION['usuario'] = $this->rut ?? $this->rut_apoderado;
             $_SESSION['tipo'] = $this->tipo;
             $_SESSION['login'] = true;
 

@@ -16,14 +16,21 @@
                 if( $user['tipo'] === 'funcionario' ){
                     $auth = new Funcionario($user);
                 }else{
+                    $rut = $user['rut'];
+                    $password = $user['password'];
+                    $user = [];
+                    $user['rut_apoderado'] = $rut;
+                    $user['nombre_apoderado'] = ' ';
+                    $user['apellido_apoderado'] = ' ';
+                    $user['password_apoderado'] = $password;
                     $auth = new Apoderado($user);
                 }
 
                 $errores = $auth->validar();
 
                 if(empty($errores)){
-
-                    $resultado = $auth->existeUsuario($user['tipo']);
+                    
+                    $resultado = $auth->existeUsuario($user['rut'] ?? $user['rut_apoderado']);
 
                     if(!$resultado){
                         if( $user['tipo'] === 'funcionario' ){

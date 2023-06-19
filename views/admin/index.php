@@ -1,7 +1,7 @@
 <nav class="cont nav">
         <?php if($_SESSION['admin'] === '1'){ ?>
             <a href="/admin/atrasos" class="b1 boton" id="Atraso">Atraso</a>
-            <a href="/admin/alumnos" class="b2 boton" id="Alumno">Alumno</a>
+            <a href="/admin/estudiantes" class="b2 boton" id="Alumno">Estudiantes</a>
             <a href="/admin/apoderados" class="b3 boton" id="Apoderado">Apoderado</a>
             <a href="/admin/funcionarios" class="b4 boton" id="Funcionario">Funcionario</a>
         <?php }else{ ?>

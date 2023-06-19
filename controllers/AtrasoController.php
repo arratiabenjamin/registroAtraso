@@ -1,7 +1,9 @@
 <?php
 
     namespace Controllers;
-    use MVC\Router;
+
+use DateTime;
+use MVC\Router;
     use Model\Atraso;
 
     class AtrasoController{
@@ -19,12 +21,15 @@
             $errores = Atraso::getErrores();
 
             if($_SERVER['REQUEST_METHOD'] === 'POST'){
+                date_default_timezone_set('America/New_York');
+                $fecha = new DateTime();
+                $_POST['atraso']['fecha'] = $fecha->format("Y-m-d");
+                $_POST['atraso']['hora'] = $fecha->format("H:i:s");
                 $atraso = new Atraso($_POST['atraso']);
                 $errores = $atraso->validar();
                 if(empty($errores)){
                     $atraso->guardar();
                 }
-
             }
 
             $router->show( '/admin/atrasos/crear', [
