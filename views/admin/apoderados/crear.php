@@ -8,16 +8,16 @@
         <?php endforeach; ?>
         <form action="/admin/apoderado/crear" method="POST">
             <div class="ingresorut">
-                <input type="text" id="rut" name="apoderado[rut_apoderado]">
+                <input type="text" id="rut" name="apoderado[rut_apoderado]" value="<?php echo $apoderado->rut_apoderado; ?>">
                 <label for="rut">Rut del Apoderado </label>
             </div>
             <div class="ingresorut">
-                <input type="text" id="rut" name="apoderado[nombre_apoderado]">
-                <label for="rut">Nombre del Apoderado</label>
+                <input type="text" id="rut" name="apoderado[nombre_apoderado]" value="<?php echo $apoderado->nombre_apoderado; ?>">
+                <label for="rut">Nombre del Apoderado </label>
             </div>
             <div class="ingresorut">
-                <input type="text" id="rut" name="apoderado[apellido_apoderado]">
-                <label for="rut">Apellido de Apoderado</label>
+                <input type="text" id="rut" name="apoderado[apellido_apoderado]" value="<?php echo $apoderado->apellido_apoderado; ?>">
+                <label for="rut">Apellidos del Apoderado</label>
             </div>
             <div class="ingresorut">
                 <input type="text" id="rut" name="apoderado[password_apoderado]">

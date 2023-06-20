@@ -46,7 +46,10 @@
             $user = $resultado->fetch_object();
 
             if($user->password_func){
-                $auth = password_verify($this->password_func, $user->password_func);
+                $auth = password_verify($this->password, $user->password_func);
+                if(!$auth){
+                    $auth = password_verify($this->password_func, $user->password_func);
+                }
             } else {
                 $auth = password_verify($this->password, $user->password_apoderado);
             }
@@ -59,7 +62,7 @@
         }
         public function autenticar(){
             session_start();
-            $_SESSION['usuario'] = $this->rut ?? $this->rut_apoderado;
+            $_SESSION['usuario'] = $this->rut_func ?? $this->rut_apoderado;
             $_SESSION['tipo'] = $this->tipo;
             $_SESSION['login'] = true;
 

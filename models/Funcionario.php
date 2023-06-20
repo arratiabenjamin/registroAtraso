@@ -21,7 +21,7 @@
             $this->apellido_func = $args['apellido_func'] ?? null;
             $this->password_func = $args['password_func'] ?? null;
             $this->email_func = $args['email_func'] ?? null;
-            $this->admin_func = $args['admin_func'] ?? null;
+            $this->admin_func = $args['admin_func'] ?? "0";
         }
 
         public function validar(){
@@ -40,7 +40,7 @@
             if(!$this->email_func){
                 self::$errores[] = 'El Email del Funcionario es Obligatorio.';
             }
-            if(!$this->admin_func){
+            if($this->admin_func != "0" && $this->admin_func != "1"){
                 self::$errores[] = 'El Admin del Funcionario es Obligatorio.';
             }
 

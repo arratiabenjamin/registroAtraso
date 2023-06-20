@@ -36,8 +36,7 @@ use DateTime;
             $keys = join(', ', array_keys($atributos));
             $values = join("', '", array_values($atributos));
 
-            $query = "INSERT INTO " . static::$tabla . " ( " . $keys . " ) VALUES ( ' " . $values . " ' )";
-            // debugear($query);
+            $query = "INSERT INTO " . static::$tabla . " ( " . $keys . " ) VALUES ( '" . $values . "' )";
             $resultado = self::$DB->query($query);
             if($resultado){
                 header('Location: /admin');
@@ -51,7 +50,11 @@ use DateTime;
             foreach($atributos as $key => $value){
                 $values[] = "$key = '$value'";
             }
-            $query = "UPDATE " . static::$tabla . " SET " . join(' ,', $values) . " WHERE " . static::$columnasDB[0] . " = " . $id . " LIMIT 1";
+            if (strpos($id, '-')) {
+                $query = "UPDATE " . static::$tabla . " SET " . join(' ,', $values) . " WHERE " . static::$columnasDB[0] . " = '" . $id . "' LIMIT 1";
+            } else {
+                $query = "UPDATE " . static::$tabla . " SET " . join(' ,', $values) . " WHERE " . static::$columnasDB[0] . " = " . $id . " LIMIT 1";
+            }
             $resultado = self::$DB->query($query);
 
             if($resultado){
@@ -77,6 +80,7 @@ use DateTime;
                         $estudiante->eliminar($estudiante->rut_estudiante);
                     }
                 }
+                $query = "DELETE FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] .  " = '" . self::$DB->escape_string($id) . "' LIMIT 1";
             } else {
                 $query = "DELETE FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] .  " = " . self::$DB->escape_string($id) . " LIMIT 1";
             }

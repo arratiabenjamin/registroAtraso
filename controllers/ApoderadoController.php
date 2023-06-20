@@ -16,9 +16,9 @@ use Model\Estudiante;
             }
             
             $router->show('apoderado/index', [
-                'estudiantes', $estudiantes,
-                'atrasos', $atrasos
-            ]);
+                'estudiantes' => $estudiantes,
+                'atrasos' => $atrasos
+            ], '../../css/indexApod');
         }
 
         public static function crear(Router $router){
@@ -49,6 +49,7 @@ use Model\Estudiante;
             $errores = Apoderado::getErrores();
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $_POST['apoderado']['password_apoderado'] = password_hash($_POST['password_apoderado'], PASSWORD_DEFAULT);
                 $args = $_POST['apoderado'];
                 $apoderado->sincronizar($args);
                 $errores = $apoderado->validar();

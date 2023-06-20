@@ -54,6 +54,7 @@
             $errores = Funcionario::getErrores();
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $_POST['funcionario']['password_func'] = password_hash($_POST['password_func'], PASSWORD_DEFAULT);
                 $args = $_POST['funcionario'];
                 $funcionario->sincronizar($args);
                 $errores = $funcionario->validar();

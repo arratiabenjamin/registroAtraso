@@ -23,7 +23,7 @@
                     $user['apellido_func'] = ' ';
                     $user['password_func'] = $password;
                     $user['email_func'] = ' ';
-                    $user['admin_func'] = ' ';
+                    $user['admin_func'] = '0';
                     $auth = new Funcionario($user);
                 }else{
                     $rut = $user['rut'];
