@@ -27,7 +27,7 @@
                                 '/admin/funcionarios', '/admin/funcionario/crear', '/admin/funcionario/actualizar', '/admin/funcionario/eliminar',
                                 '/apoderado', '/apoderado/estudiante'];
 
-            $urlActual = $_SERVER['PATH_INFO'] ?? '/';
+            $urlActual = $_SERVER['PATH_INFO'] ?? $_SERVER['REDIRECT_URL'] ?? '/';
             $metodo = $_SERVER['REQUEST_METHOD'];
 
             //Proteger Rutas

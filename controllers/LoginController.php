@@ -4,15 +4,23 @@
     use MVC\Router;
     use Model\Funcionario;
     use Model\Apoderado;
+    use Controllers\ApoderadoController;
 
     class LoginController{
 
         public static function login(Router $router){
 
             $errores = [];
+            
+            if($_SESSION["tipoInicioSesion"] == "AppMovil"){
+                ApoderadoController::indexMovil();
+                exit;
+            }
 
-            if( $_SERVER['REQUEST_METHOD'] === 'POST' ){
+            if( $_SERVER['REQUEST_METHOD'] === 'POST'){
+                
                 $user = $_POST;
+
                 if( $user['tipo'] === 'funcionario' ){
                     $rut = $user['rut'];
                     $password = $user['password'];
@@ -33,6 +41,7 @@
                     $user['nombre_apoderado'] = ' ';
                     $user['apellido_apoderado'] = ' ';
                     $user['password_apoderado'] = $password;
+                    $user['tipoInicioSesion'] = $tipoInicioSesion ?? null;
                     $auth = new Apoderado($user);
                 }
 

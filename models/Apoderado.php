@@ -8,6 +8,7 @@
         public $nombre_apoderado;
         public $apellido_apoderado;
         public $password_apoderado;
+        public $tipoInicioSesion;
 
         protected static $tabla = 'apoderados';
         protected static $columnasDB = ['rut_apoderado', 'password_apoderado', 'nombre_apoderado', 'apellido_apoderado' ];
@@ -18,6 +19,7 @@
             $this->nombre_apoderado = $args['nombre_apoderado'] ?? null;
             $this->apellido_apoderado = $args['apellido_apoderado'] ?? null;
             $this->password_apoderado = $args['password_apoderado'] ?? null;
+            $this->tipoInicioSesion = $args['tipoInicioSesion'] ?? null;
         }
 
         public function validar(){

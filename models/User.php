@@ -8,6 +8,7 @@
         public $tipo;
         public $rut;
         public $password;
+        public $tipoInicioSesion;
         
         public function __construct($args = [])
         {
@@ -15,6 +16,7 @@
             $this->tipo = $args['tipo'] ?? null;
             $this->rut = $args['rut'] ?? null;
             $this->password = $args['password'] ?? null;
+            $this->tipoInicioSesion = $args['tipoInicioSesion'] ?? null;
         }
 
         public function validar(){
@@ -51,7 +53,7 @@
                     $auth = password_verify($this->password_func, $user->password_func);
                 }
             } else {
-                $auth = password_verify($this->password, $user->password_apoderado);
+                $auth = $this->password_apoderado == $user->password_apoderado;
             }
             
             if(!$auth){
@@ -64,12 +66,18 @@
             session_start();
             $_SESSION['usuario'] = $this->rut_func ?? $this->rut_apoderado;
             $_SESSION['tipo'] = $this->tipo;
+            $_SESSION['tipoInicioSesion'] = $this->tipoInicioSesion;
             $_SESSION['login'] = true;
+            
 
             if($_SESSION['tipo'] === 'funcionario'){
                 header('Location: /admin');
             }else{
-                header('Location: /apoderado');
+                if($this->tipoInicioSesion){
+                    header('Location: /');
+                }else{
+                    header('Location: /apoderado');
+                }    
             }
         }
 

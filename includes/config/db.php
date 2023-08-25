@@ -1,10 +1,12 @@
 <?php
 
     function conectarDB() : mysqli{
-        $DB = mysqli_connect( 'localhost', 'root', 'Demu1771$', 'registroAtraso' );
-
-        if(!$DB){
-            echo 'Conexion Fallida...';
+        try {
+            $DB = mysqli_connect( 'localhost', '', '', '' );
+        } catch (\Throwable $th) {
+            echo "<pre>";
+            var_dump($th);
+            echo "</pre>";
             exit;
         }
 
