@@ -1,37 +1,41 @@
-<main>
-    <div class="formulario">
-        <h1>Actualizacion Funcionario</h1>
-        <?php foreach($errores as $error): ?>
-            <div class="alerta error">
-                <?php echo $error; ?>
-            </div>
-        <?php endforeach; ?>
-        <form action="/admin/funcionario/actualizar" method="POST">
-            <div class="ingresorut">
-                <input type="text" id="rut" name="funcionario[nombre_func]" value="<?php echo $funcionario->nombre_func; ?>">
-                <label for="rut">Nombre del Funcionario</label>
-            </div>
-            <div class="ingresorut">
-                <input type="text" id="rut" name="funcionario[apellido_func]" value="<?php echo $funcionario->apellido_func; ?>">
-                <label for="rut">Apellido de Funcionario</label>
-            </div>
-            <div class="ingresorut">
-                <input type="text" id="rut" name="funcionario[password_func]" require>
-                <label for="rut">Password de Funcionario</label>
-            </div>
-            <div class="ingresorut">
-                <input type="text" id="rut" name="funcionario[email_func]" value="<?php echo $funcionario->email_func; ?>">
-                <label for="rut">Email de Funcionario</label>
-            </div>
-            <div class="ingresorut">
-                <input type="text" id="rut" name="funcionario[admin_func]" placeholder="0 - 1 (0 = no / 1 = si)" require>
-                <label for="rut">Admin de Funcionario</label>
-            </div>
-            <input type="hidden" name="id" value="<?php echo $funcionario->rut_func;?>">
+<main id="main">
+    <form class="form" action="/admin/funcionario/actualizar" method="POST">
+        <legend class="tittle"> Actualizar Funcionario</legend>
+        <!-- CAMPOS -->
+        <div class="cont-campos">
+            <h5>Rut:</h5>
+            <input class="text-area" type="text" id="rut_func" name="funcionario[rut_func]" placeholder="12345678-9" value="<?php echo $funcionario->rut_func; ?>">
+        </div>
+        <div class="cont-campos">
+            <h5>Nombre:</h5>
+            <input class="text-area" type="text" id="nombres_func" name="funcionario[nombres_func]" placeholder="Nombre" value="<?php echo $funcionario->nombres_func; ?>">
+        </div>
+        <div class="cont-campos">
+            <h5>Apellido:</h5>
+            <input class="text-area" type="text" id="apellidos_func" name="funcionario[apellidos_func]" placeholder="Apellido" value="<?php echo $funcionario->apellidos_func; ?>">
+        </div>
+        <div class="cont-campos">
+            <h5> Contraseña:</h5>
+            <input class="text-area" type="text" id="password_func" name="funcionario[password_func]" placeholder="*********">
+        </div>
+        <div class="cont-campos">
+            <h5> Email:</h5>
+            <input class="text-area" type="email" id="email_func" name="funcionario[email_func]" placeholder="example@email.com" value="<?php echo $funcionario->email_func; ?>">
+        </div>
+        <div class="cont-campos">
+            <h5> Admin:</h5>
+            <input type="radio" name="funcionario[admin_func]" id="1" value="1"> si
+            <input type="radio" name="funcionario[admin_func]" id="0" value="0"> no
+        </div>
+        <input type="hidden" name="id" value="<?php echo $funcionario->rut_func;?>">
 
-            <div class="enviar">
-                <input type="submit" value="Enviar">
-            </div>
-        </form>
-    </div>
+        <!-- BOTON AGREGAR -->
+        <div class="cont-boton">
+            <input class="boton" type="submit" id="login_funcionario" value="Agregar">
+        </div>
+    </form>
+
+    <script src="../../js/app.js"></script>
+    <script src="../../js/filter.js"></script>
+
 </main>

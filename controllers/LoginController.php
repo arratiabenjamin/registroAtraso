@@ -4,6 +4,8 @@
     use MVC\Router;
     use Model\Funcionario;
     use Model\Apoderado;
+    use Model\Estudiante;
+    use Model\Atraso;
     use Controllers\ApoderadoController;
 
     class LoginController{
@@ -12,10 +14,6 @@
 
             $errores = [];
             
-            if($_SESSION["tipoInicioSesion"] == "AppMovil"){
-                ApoderadoController::indexMovil();
-                exit;
-            }
 
             if( $_SERVER['REQUEST_METHOD'] === 'POST'){
                 
@@ -27,8 +25,8 @@
                     $user = [];
                     $user['tipo'] = 'funcionario';
                     $user['rut_func'] = $rut;
-                    $user['nombre_func'] = ' ';
-                    $user['apellido_func'] = ' ';
+                    $user['nombres_func'] = ' ';
+                    $user['apellidos_func'] = ' ';
                     $user['password_func'] = $password;
                     $user['email_func'] = ' ';
                     $user['admin_func'] = '0';
@@ -37,10 +35,10 @@
                     $rut = $user['rut'];
                     $password = $user['password'];
                     $user = [];
-                    $user['rut_apoderado'] = $rut;
-                    $user['nombre_apoderado'] = ' ';
-                    $user['apellido_apoderado'] = ' ';
-                    $user['password_apoderado'] = $password;
+                    $user['rut_apod'] = $rut;
+                    $user['nombres_apod'] = ' ';
+                    $user['apellidos_apod'] = ' ';
+                    $user['password_apod'] = $password;
                     $user['tipoInicioSesion'] = $tipoInicioSesion ?? null;
                     $auth = new Apoderado($user);
                 }
@@ -49,7 +47,7 @@
 
                 if(empty($errores)){
                     
-                    $resultado = $auth->existeUsuario($user['rut_func'] ?? $user['rut_apoderado']);
+                    $resultado = $auth->existeUsuario($user['rut_func'] ?? $user['rut_apod']);
 
                     if(!$resultado){
                         if( $user['tipo'] === 'funcionario' ){
@@ -62,8 +60,8 @@
                         $autenticacion = $auth->comprobarPassword($resultado);
 
                         if($autenticacion){
-                            session_start();
-                            $_SESSION['admin'] = Funcionario::findRecord($user['rut_func'])->admin_func;
+                            $_SESSION['admin'] = Funcionario::findRecordColumnEspecific($user['rut_func'])->admin_func;
+                            
                             $auth->autenticar();
                         }else{
                             if( $user['tipo'] === 'funcionario' ){
@@ -81,9 +79,62 @@
             ], '../css/login', true );
         }
 
+        public static function loginApp(){
+            if($_SERVER["REQUEST_METHOD"] === "POST"){
+                $errores = [];
+                
+                $user = $_POST;
+                
+                $user['nombres_apod'] = ' ';
+                $user['apellidos_apod'] = ' ';
+                
+                $apoderado = new Apoderado($user);
+                
+                $errores = $apoderado->validar();
+                
+                if (empty($errores)) {
+                
+                    $resultado = $apoderado->existeUsuario($user['rut_apod']);
+                
+                    if (!$resultado) {
+                        $errores = Apoderado::getErrores();
+                    } else {
+                        $autenticacion = $apoderado->comprobarPassword($resultado);
+                
+                        if ($autenticacion) {
+                            session_start();
+                            $apoderado->tipo = "App";
+                            $apoderado->autenticar();
+                        } else {
+                            $errores = Apoderado::getErrores();
+                        }
+                    }
+                }
+                
+                echo $errores[0];
+            }else{
+                $rut_apod = $_GET["rut_apod"];
+
+                $estudiantes = Estudiante::findRecordColumnEspecific($rut_apod, 'rut_apod');
+                $atrasos = [];
+                
+                foreach($estudiantes as $estudiante){
+                    $atrasos["estudiantes"][] = $estudiante;
+                    $atrasos["atrasos"][] = Atraso::findRecordColumnEspecific($estudiante->rut_estu, 'rut_estu');
+                }
+                
+                while ($row = mysqli_fetch_object($resultado)) {
+                    $atrasos[] = $row;
+                }
+                
+                echo json_encode($atrasos);
+            }
+        }
+
         public static function logout(Router $router){
             session_start();
             $_SESSION = [];
             header('Location: /');
         }
+    
     }

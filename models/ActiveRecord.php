@@ -32,15 +32,37 @@ use DateTime;
             }
         }
         public function crear(){
+
             $atributos = $this->sanitizarAtributos();
             $keys = join(', ', array_keys($atributos));
             $values = join("', '", array_values($atributos));
+            //debugear($values);
 
-            $query = "INSERT INTO " . static::$tabla . " ( " . $keys . " ) VALUES ( '" . $values . "' )";
-            $resultado = self::$DB->query($query);
-            if($resultado){
-                header('Location: /admin');
+            // Limpia los resultados anteriores, si los hubiera
+            while (self::$DB->more_results()) {
+                self::$DB->next_result();
+                if ($result = self::$DB->store_result()) {
+                    $result->free();
+                }
             }
+
+            $query = "CALL SP_INSERT(\"" . static::$tabla . "\", \"" . $keys . "\", \"" . $values . "\");";
+            // debugear($query);
+            $result = self::$DB->multi_query($query);
+
+            if (!$result) {
+                die('Error en la consulta: ' . self::$DB->error);
+            }
+
+            // Limpia los resultados
+            do {
+                if ($result = self::$DB->store_result()) {
+                    $result->free();
+                }
+            } while (self::$DB->more_results() && self::$DB->next_result());
+
+            header('Location: /admin');
+
         }
         public function actualizar($id){
             //Sanitizar
@@ -50,54 +72,94 @@ use DateTime;
             foreach($atributos as $key => $value){
                 $values[] = "$key = '$value'";
             }
-            if (strpos($id, '-')) {
-                $query = "UPDATE " . static::$tabla . " SET " . join(' ,', $values) . " WHERE " . static::$columnasDB[0] . " = '" . $id . "' LIMIT 1";
-            } else {
-                $query = "UPDATE " . static::$tabla . " SET " . join(' ,', $values) . " WHERE " . static::$columnasDB[0] . " = " . $id . " LIMIT 1";
-            }
-            $resultado = self::$DB->query($query);
 
-            if($resultado){
-                header('Location: /admin');
+             // Limpia los resultados anteriores, si los hubiera
+            while (self::$DB->more_results()) {
+                self::$DB->next_result();
+                if ($result = self::$DB->store_result()) {
+                    $result->free();
+                }
             }
+
+            $query = "CALL SP_UPDATE(\"" . static::$tabla . "\", \"" . join(' ,', $values) . "\", \"" . static::$columnasDB[0] . "\", \"" . $id . "\");";
+
+            $result = self::$DB->multi_query($query);
+
+            if (!$result) {
+                die('Error en la consulta: ' . self::$DB->error);
+            }
+
+            // Limpia los resultados
+            do {
+                if ($result = self::$DB->store_result()) {
+                    $result->free();
+                }
+            } while (self::$DB->more_results() && self::$DB->next_result());
+
+            header('Location: /admin');
 
         }
+
         public function eliminar($id){
             $resultado = true;
             if (strpos($id, "-")) {
                 if(static::$tabla === 'estudiantes'){
-                    $atrasos = Atraso::findRecordColumnEspecific('rut_estudiante', $this->rut_estudiante);
+                    $atrasos = Atraso::findRecordColumnEspecific($this->rut_estu, 'rut_estu');
                     foreach($atrasos as $atraso){
-                        $atraso->eliminar($atraso->id_atraso);
+                        $atraso->eliminar($atraso->id_atr);
                     }
                 } else if(static::$tabla === 'apoderados'){
-                    $estudiantes = Estudiante::findRecordColumnEspecific('rut_apoderado', $this->rut_apoderado);
+                    $estudiantes = Estudiante::findRecordColumnEspecific($this->rut_apod, 'rut_apod');
                     foreach($estudiantes as $estudiante){
-                        $atrasos = Atraso::findRecordColumnEspecific('rut_estudiante', $estudiante->rut_estudiante);
+                        $atrasos = Atraso::findRecordColumnEspecific($estudiante->rut_estu, 'rut_estu');
                         foreach($atrasos as $atraso){
-                            $atraso->eliminar($atraso->id_atraso);
+                            $atraso->eliminar($atraso->id_atr);
                         }
-                        $estudiante->eliminar($estudiante->rut_estudiante);
+                        $estudiante->eliminar($estudiante->rut_estu);
                     }
                 }
-                $query = "DELETE FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] .  " = '" . self::$DB->escape_string($id) . "' LIMIT 1";
+                //$query = "DELETE FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] .  " = '" . self::$DB->escape_string($id) . "' LIMIT 1";
             } else {
-                $query = "DELETE FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] .  " = " . self::$DB->escape_string($id) . " LIMIT 1";
-            }
-            if($this->admin_func != '1'){
-                $resultado = self::$DB->query($query);
+                //$query = "DELETE FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] .  " = " . self::$DB->escape_string($id) . " LIMIT 1";
             }
 
-            if($resultado){
-                header('Location: /');
+            // Limpia los resultados anteriores, si los hubiera
+            while (self::$DB->more_results()) {
+                self::$DB->next_result();
+                if ($result = self::$DB->store_result()) {
+                    $result->free();
+                }
             }
+
+            $query = "CALL SP_DELETE( \"" . static::$tabla . "\", \"" . static::$columnasDB[0] . "\", \"" . self::$DB->escape_string($id) . "\");";
+
+            //debugear($query);
+
+            if($this->admin_func != '1'){
+                $result = self::$DB->multi_query($query);
+
+                if (!$result) {
+                    die('Error en la consulta: ' . self::$DB->error);
+                }
+
+                // Limpia los resultados
+                do {
+                    if ($result = self::$DB->store_result()) {
+                        $result->free();
+                    }
+                } while (self::$DB->more_results() && self::$DB->next_result());
+
+            }
+
+            header('Location: /admin');
+
         }
 
         //Obtener Atributos
         public function atributos(){
             $atributos = [];
             foreach( static::$columnasDB as $columna ){
-                if($columna === 'id_atraso')continue;
+                if($columna === 'id_atr' or $columna === 'id_curso')continue;
                 $atributos[$columna] = $this->$columna;
             }
             return $atributos;
@@ -114,39 +176,114 @@ use DateTime;
 
         //Recolectar Todos los Registros
         public static function all(){
-            $query = "SELECT * FROM " . static::$tabla;
+            $query = "CALL SP_SELECT_ALL('" . static::$tabla . "');";
             $tabla = self::consultarSQL($query);
             return $tabla;
         }
         //Recolectar Cantidad Especifica de Registros
         public static function getLimit($limit){
-            $query = "SELECT * FROM " . static::$tabla . " LIMIT " . $limit;
+            $query = "CALL SP_SELECT_LIMIT('" . static::$tabla . "', " . $limit . ");";
+            // debugear($query);
             $tabla = self::consultarSQL($query);
             return $tabla;
         }
+
         //Buscar un Registro Especifico
-        public static function findRecord($id){
-            $query = "SELECT * FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] . " = '" . $id . "';";
+        // public static function findRecord($id){
+        //     $query = "SELECT * FROM " . static::$tabla . " WHERE " . static::$columnasDB[0] . " = '" . $id . "';";
+        //     $tabla = self::consultarSQL($query);
+        //     return array_shift($tabla);
+        // }
+
+        public static function findRecordColumnEspecific($value, $column = null){
+            if(!$column){
+                $column = static::$columnasDB[0];
+            }
+            // $query = "SELECT * FROM " . static::$tabla . " WHERE " . $column . " = '" . $value . "';";
+            $query = "CALL SP_SELECT_COLUMN_ESPECIFIC( \"" . static::$tabla . "\", \"" . $column . "\", \"" . $value . "\");";
+            // debugear($query);
             $tabla = self::consultarSQL($query);
-            return array_shift($tabla);
-        }
-        //Buscar un Registro Especifico por Columna
-        public static function findRecordColumnEspecific($column, $id){
-            $query = "SELECT * FROM " . static::$tabla . " WHERE " . $column . " = '" . $id . "';";
-            $tabla = self::consultarSQL($query);
+            // debugear($tabla);
+            // debugear($column);
+            if($column != "rut_apod" && !$tabla[1]->id_atr ){
+                return $tabla[0];
+            }
             return $tabla;
         }
-        //Consultar DB
+
         public static function consultarSQL($query) {
-            $tablas = self::$DB->query($query);
-            $array = [];
-            foreach($tablas as $tabla) {
-                $array[] = static::crearObjeto($tabla);
+
+            if (self::$DB->more_results()) {
+                self::$DB->next_result();
+                while (self::$DB->more_results() && self::$DB->next_result()) {
+                    self::$DB->store_result();
+                }
             }
-            $tablas->free();
+            try{
+                $tablas = self::$DB->query($query);
+                $array = [];
+                foreach($tablas as $tabla) {
+                    $array[] = static::crearObjeto($tabla);
+                }
+
+                $tablas->free();
+
+            }catch (\Throwable $th) {
+                // Manejar la excepcion de acuerdo a tus necesidades
+                //debugear($query);
+                debugear($th);
+            }
 
             return $array;
         }
+        /*
+        public static function consultarSQL($query) {
+            try {
+                //debugear("entrada al try");
+                // Cerrar cualquier conjunto de resultados anterior
+                if (self::$DB->more_results()) {
+                    self::$DB->next_result();
+                    while (self::$DB->more_results() && self::$DB->next_result()) {
+                        self::$DB->store_result();
+                    }
+                }
+
+                // Utilizar consulta preparada
+                //debugear($query);
+                $stmt = self::$DB->prepare($query);
+                if ($stmt === false) {
+                    throw new \Exception("Error preparing query: " . self::$DB->error);
+                }
+
+                //debugear("antes de ejecucion");
+                // Ejecutar la consulta
+                debugear($stmt->execute());
+                if (!$stmt->execute()) {
+                    debugear($query);
+                    throw new \Exception("Error executing query: " . $stmt->error);
+                }
+
+                $array = [];
+                $result = $stmt->get_result();
+                // debugear($result);
+
+                if ($result) {
+                    while ($tabla = $result->fetch_assoc()) {
+                        $array[] = static::crearObjeto($tabla);
+                    }
+                    $result->free();
+                }
+                // debugear($array);
+
+                return $array;
+            } catch (\Throwable $th) {
+                // Manejar la excepción de acuerdo a tus necesidades
+                debugear($query);
+                debugear($th);
+            }
+        }
+        */
+
         //Crear Objetos
         protected static function crearObjeto($tabla) {
             $obj = new static;
@@ -161,7 +298,9 @@ use DateTime;
         }
 
         public function sincronizar($args = []) {
+            //debugear($args);
             foreach($args as $key => $value){
+                //debugear("pasa a foreach");
                 //Si las propiedades Existen y valor no es nulo - El atributo tendra como valor "$value".
                 if(property_exists($this, $key) && !is_null($value)) {
                     $this->$key = $value;

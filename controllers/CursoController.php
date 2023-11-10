@@ -8,39 +8,39 @@
     use Model\Funcionario;
     use Model\Curso;
 
-    class EstudianteController{
+    class CursoController{
         public static function index(Router $router){   
-            $estudiantes = Estudiante::all();
+            $cursos = Curso::all();
 
-            $router->show( '/admin/estudiantes', [
-                "estudiantes" => $estudiantes
+            $router->show( '/admin/cursos', [
+                "cursos" => $cursos
             ], '../css/funcionario' );
         }
         
         public static function crear(Router $router){
 
-            $estudiante = new Estudiante();
-            $errores = Estudiante::getErrores();
+            $curso = new curso();
+            $errores = Curso::getErrores();
             
             $atrasos = Atraso::getLimit(5) ?? null;
-            $estudiantes = Estudiante::getLimit(5) ?? null;
-            $estudiantesAll = Estudiante::all() ?? null;
+            $estudiantes = Curso::getLimit(5) ?? null;
+            $estudiantesAll = Curso::all() ?? null;
             $apoderados = Apoderado::getLimit(5) ?? null;
             $apoderadosAll = Apoderado::all() ?? null;
             $funcionarios = Funcionario::getLimit(5) ?? null;
-            $cursos = Curso::all();
+            $cursos = Curso::getLimit(5) ?? null;
+            $cursosAll = Curso::all();
 
             if($_SERVER['REQUEST_METHOD'] === 'POST'){
-                $_POST['estudiante']['id_curso'] = explode(')', $_POST['estudiante']['id_curso'])[0];
-                $estudiante = new Estudiante($_POST['estudiante']);
-                $errores = $estudiante->validar();
+                $curso = new curso($_POST['curso']);
+                $errores = $curso->validar();
                 if(empty($errores)){
-                    $estudiante->guardar();
+                    $curso->guardar();
                 }
             }
 
             $router->show( '/admin/index', [
-                'estudiante' => $estudiante,
+                'curso' => $curso,
                 'errores' => $errores,
                 'atrasos' => $atrasos,
                 'estudiantes' => $estudiantes,
@@ -48,33 +48,31 @@
                 'apoderados' => $apoderados,
                 'apoderadosAll' => $apoderadosAll,
                 'funcionarios' => $funcionarios,
-                'cursos' => $cursos
+                'cursos' => $cursos,
+                'cursosAll' => $cursosAll
             ], '../../css/funcionario' );
 
         }
         
         public static function actualizar(Router $router){
 
-            $estudiante = Estudiante::findRecordColumnEspecific($_GET['id']) ?? Estudiante::findRecordColumnEspecific($_POST['id']);
-            $cursos = Curso::all();
-            $errores = Estudiante::getErrores();
+            $curso = Curso::findRecordColumnEspecific($_GET['id']) ?? Curso::findRecordColumnEspecific($_POST['id']);
+            $errores = Curso::getErrores();
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $_POST['estudiante']['id_curso'] = explode(')', $_POST['estudiante']['id_curso'])[0];
-                $args = $_POST['estudiante'];
+                $args = $_POST['curso'];
                 //debugear("hola");
-                $estudiante->sincronizar($args);
-                $errores = $estudiante->validar();
+                $curso->sincronizar($args);
+                $errores = $curso->validar();
 
                 if (empty($errores)) {
-                    $estudiante->guardar($estudiante->rut_estu);
+                    $curso->guardar($curso->id_curso);
                 }
 
             }
             
-            $router->show('admin/estudiantes/actualizar', [
-                'estudiante' => $estudiante,
-                'cursos' => $cursos,
+            $router->show('admin/cursos/actualizar', [
+                'curso' => $curso,
                 'errores' => $errores
             ], '../../css/funcionario');
 
@@ -88,8 +86,8 @@
                 if($idEntidad){
                     $entidad = $_POST['entidad'];
                     if(validarEntidad($entidad)){
-                        $entidad = Estudiante::findRecordColumnEspecific($idEntidad);
-                        $entidad->eliminar($entidad->rut_estu);
+                        $entidad = Curso::findRecordColumnEspecific($idEntidad);
+                        $entidad->eliminar($entidad->id_curso);
                     }
                 }
             }

@@ -2,32 +2,45 @@
 
     namespace Controllers;
     use MVC\Router;
+    use Model\Atraso;
+    use Model\Estudiante;
     use Model\Apoderado;
-use Model\Atraso;
-use Model\Estudiante;
+    use Model\Funcionario;
+    use Model\Curso;
 
     class ApoderadoController{
         public static function index(Router $router){
-            $estudiantes = Estudiante::findRecordColumnEspecific('rut_apoderado', $_SESSION['usuario']);
+            $estudiantes = Estudiante::findRecordColumnEspecific($_SESSION['usuario'], 'rut_apod');
+            // debugear($estudiantes);
             $atrasos = [];
 
             foreach($estudiantes as $estudiante){
-                $atrasos[] = Atraso::findRecordColumnEspecific('rut_estudiante', $estudiante->rut_estudiante);
+                // debugear($estudiante);
+                $atrasos[] = Atraso::findRecordColumnEspecific($estudiante->rut_estu, 'rut_estu');
+                // debugear($atrasos);
             }
             
             $router->show('apoderado/index', [
                 'estudiantes' => $estudiantes,
                 'atrasos' => $atrasos
-            ], '../../css/indexApod');
+            ], '../../css/apoderado');
         }
 
         public static function crear(Router $router){
 
             $apoderado = new Apoderado();
             $errores = Apoderado::getErrores();
+            
+            $atrasos = Atraso::getLimit(5) ?? null;
+            $estudiantes = Estudiante::getLimit(5) ?? null;
+            $estudiantesAll = Estudiante::all() ?? null;
+            $apoderados = Apoderado::getLimit(5) ?? null;
+            $apoderadosAll = Apoderado::all() ?? null;
+            $funcionarios = Funcionario::getLimit(5) ?? null;
+            $cursos = Curso::all();
 
             if($_SERVER['REQUEST_METHOD'] === 'POST'){
-                $_POST['apoderado']['password_apoderado'] = password_hash($_POST['password_apoderado'], PASSWORD_DEFAULT);
+                $_POST['apoderado']['password_apod'] = password_hash($_POST['apoderado']['password_apod'], PASSWORD_DEFAULT);
                 $apoderado = new Apoderado($_POST['apoderado']);
                 $errores = $apoderado->validar();
                 if(empty($errores)){
@@ -36,23 +49,31 @@ use Model\Estudiante;
 
             }
 
-            $router->show( '/admin/apoderados/crear', [
+            $router->show( '/admin/index', [
                 'apoderado' => $apoderado,
-                'errores' => $errores
-            ], '../../css/' );
+                'errores' => $errores,
+                'atrasos' => $atrasos,
+                'estudiantes' => $estudiantes,
+                'estudiantesAll' => $estudiantesAll,
+                'apoderados' => $apoderados,
+                'apoderadosAll' => $apoderadosAll,
+                'funcionarios' => $funcionarios,
+                'cursos' => $cursos
+            ], '../../css/funcionario' );
 
         }
 
         public static function actualizar(Router $router){
 
-            $apoderado = Apoderado::findRecord($_GET['id']) ?? Apoderado::findRecord($_POST['id']);
+            $apoderado = Apoderado::findRecordColumnEspecific($_GET['id'])[0] ?? Apoderado::findRecordColumnEspecific($_POST['id'])[0];
             $errores = Apoderado::getErrores();
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $_POST['apoderado']['password_apoderado'] = password_hash($_POST['password_apoderado'], PASSWORD_DEFAULT);
+                $_POST['apoderado']['password_apod'] = password_hash($_POST['apoderado']['password_apod'], PASSWORD_DEFAULT);
                 $args = $_POST['apoderado'];
                 $apoderado->sincronizar($args);
                 $errores = $apoderado->validar();
+
 
                 if (empty($errores)) {
                     $apoderado->guardar($_POST['id']);
@@ -63,7 +84,7 @@ use Model\Estudiante;
             $router->show('admin/apoderados/actualizar', [
                 'apoderado' => $apoderado,
                 'errores' => $errores
-            ], '../../css/formularioapoderado');
+            ], '../../css/funcionario');
 
         }
 
@@ -75,8 +96,8 @@ use Model\Estudiante;
                 if($idEntidad){
                     $entidad = $_POST['entidad'];
                     if(validarEntidad($entidad)){
-                        $entidad = Apoderado::findRecord($idEntidad);
-                        $entidad->eliminar($entidad->rut_apoderado);
+                        $entidad = Apoderado::findRecordColumnEspecific($idEntidad)[0];
+                        $entidad->eliminar($entidad->rut_apod);
                     }
                 }
             }

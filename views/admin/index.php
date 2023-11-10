@@ -1,144 +1,242 @@
-<nav class="cont nav">
-        <?php if($_SESSION['admin'] === '1'){ ?>
-            <a href="/admin/atrasos" class="b1 boton" id="Atraso">Atraso</a>
-            <a href="/admin/estudiantes" class="b2 boton" id="Alumno">Estudiantes</a>
-            <a href="/admin/apoderados" class="b3 boton" id="Apoderado">Apoderado</a>
-            <a href="/admin/funcionarios" class="b4 boton" id="Funcionario">Funcionario</a>
-        <?php }else{ ?>
-            <a href="/admin/atraso/crear" class="b1 boton">Atraso</a>
-        <?php } ?>
-</nav>
+<main id="main">
 
-<main class="cont main">
-    <table class="table" id="atraso">
-    
-        <h2 class="tab-title" >Atrasos</h2>
-        <thead class="Atraso b1 ">
-            <tr> 
-                <th>ID</th>
-                <th>Fecha</th>
-                <th>Hora</th>
-                <th>Rut Estudiante</th>
-                <th>Rut Funcionario</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
+    <?php if ($errores) : ?>
+
+        <div id="errores" style="display: grid; grid-template-columns: auto auto;">
+            <?php foreach ($errores as $error) : ?>
+                <p class="error" style="background-color: red; border-radius: .5rem; padding: 1rem; color: white; margin-left: .5rem;   "><?php echo $error; ?></p>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
+    <table class="table">
+        <h2 class="tab-title">Atrasos</h2>
+
+        <!-- Nueva Tabla -->
         <tbody>
-            <?php foreach($atrasos as $atraso): ?>
-                <tr>
-                    <td><?php echo $atraso->id_atraso ?></td>
-                    <td><?php echo $atraso->fecha_atraso ?></td>
-                    <td><?php echo $atraso->hora_atraso ?></td>
-                    <td><?php echo $atraso->rut_estudiante ?></td>
-                    <td><?php echo $atraso->rut_func ?></td>
-                    <td>
-                        <form method="POST" class="w-100" action="admin/atraso/eliminar">
-                            <input type="hidden" name="id" value="<?php echo $atraso->id_atraso; ?>">
-                            <input type="hidden" name="entidad" value="atraso">
-                            <input type="submit" class="boton-rojo-block" value="Eliminar">
+            <tr class="header row">
+                <th class="cell pl">N° </th>
+                <th class="cell">Fecha</th>
+                <th class="cell h">Hora</th>
+                <th class="cell">Rut Estudiante</th>
+                <th class="cell">Nombre Estudiante</th>
+                <th class="cell">Curso</th>
+                <th class="cell">Comentario</th>
+                <th class="cell act">Acciones </th>
+            </tr>
+            <?php foreach ($atrasos as $atraso) : ?>
+                <tr class="row">
+                    <!-- Info Varia -->
+                    <td class="cell pl"><?php echo $atraso->id_atr ?></td>
+                    <td class="cell"><?php echo $atraso->fecha_atr ?></td>
+                    <td class="cell h"><?php echo $atraso->hora_atr ?></td>
+                    <td class="cell"><?php echo $atraso->rut_estu ?></td>
+
+                    <!-- Nombre y Curso Estudiante -->
+                    <?php foreach ($estudiantesAll as $estudiante) : ?>
+                        <?php if ($estudiante->rut_estu == $atraso->rut_estu) : ?>
+                            <td class="cell"><?php echo $estudiante->nombres_estu . "<br>" . $estudiante->apellidos_estu ?></td>
+                            <td class="cell"><?php echo $estudiante->id_curso ?></td>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+
+                    <!-- Comentario -->
+                    <td class="cell"><?php echo $atraso->comentario_atr == "" ? "N/A" : $atraso->comentario_atr ?></td>
+
+                    <!-- Acciones -->
+                    <td class="action cell">
+
+                        <a href="/admin/atraso/actualizar?id=<?php echo $atraso->id_atr; ?>">
+                            <input class="btn-action actualizar" type="button" value="Editar" />
+                        </a>
+
+                        <form method="POST" action="admin/atraso/eliminar">
+                            <input class="btn-action eliminar" type="submit" value="Borrar" />
+                            <input type="hidden" name="id" value="<?php echo $atraso->id_atr; ?>" />
+                            <input type="hidden" name="entidad" value="atraso" />
                         </form>
-                        <a href="/admin/atraso/actualizar?id=<?php echo $atraso->id_atraso; ?>" class="boton-verde-block">Actualizar</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
+
+
+        <!-- Antigua Tabla -->
+        <!--
+        <tbody>
+            <tr class="header row">
+                <th class="cell pl">ID </th>
+                <th class="cell">Fecha</th>
+                <th class="cell h">Hora</th>
+                <th class="cell">Rut Estudiante</th>
+                <th class="cell">Rut Funcionario</th>
+                <th class="cell act">Acciones </th>
+            </tr>
+            <?php foreach ($atrasos as $atraso) : ?>
+                <tr class="row">
+                    <td class="cell pl"><?php echo $atraso->id_atr ?></td>
+                    <td class="cell"><?php echo $atraso->fecha_atr ?></td>
+                    <td class="cell h"><?php echo $atraso->hora_atr ?></td>
+                    <td class="cell"><?php echo $atraso->rut_estu ?></td>
+                    <td class="cell"><?php echo $atraso->rut_func ?></td>
+                    <td class="action cell">
+
+                        <a href="/admin/atraso/actualizar?id=<?php echo $atraso->id_atr; ?>">
+                            <input class="btn-action actualizar" type="button" value="Editar" />
+                        </a>
+
+                        <form method="POST" action="admin/atraso/eliminar">
+                            <input class="btn-action eliminar" type="submit" value="Borrar" />
+                            <input type="hidden" name="id" value="<?php echo $atraso->id_atr; ?>" />
+                            <input type="hidden" name="entidad" value="atraso" />
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+        -->
     </table>
+    <a href="/admin/atrasos" class="viewAll">Ver todos</a>
 
-    <?php if($_SESSION['admin'] === '1'): ?>
 
-        <table class="table" id="alumno">
-            <h2 class="tab-title" >Alumnos</h2>
-            <thead class="Alumno b2">
-                <tr>
-                    <th>Rut</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Curso</th>
-                    <th>Rut Apoderado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
+    <?php if ($_SESSION['admin'] == '1') : ?>
+
+        <table class="table">
+            <h2 class="tab-title">Estudiantes</h2>
             <tbody>
-                <?php foreach($estudiantes as $estudiante): ?>
-                    <tr>
-                        <td><?php echo $estudiante->rut_estudiante ?></td>
-                        <td><?php echo $estudiante->nombres_estudiante ?></td>
-                        <td><?php echo $estudiante->apellidos_estudiante ?></td>
-                        <td><?php echo $estudiante->curso_estudiante ?></td>
-                        <td><?php echo $estudiante->rut_apoderado ?></td>
-                        <td>
-                            <form method="POST" class="w-100" action="admin/estudiante/eliminar">
-                                <input type="hidden" name="id" value="<?php echo $estudiante->rut_estudiante; ?>">
-                                <input type="hidden" name="entidad" value="estudiante">
-                                <input type="submit" class="boton-rojo-block" value="Eliminar">
+                <tr class="header row">
+                    <th class="cell pl">Rut</th>
+                    <th class="cell">Nombres</th>
+                    <th class="cell">Apellidos</th>
+                    <th class="cell">Curso</th>
+                    <th class="cell">Rut Apoderado</th>
+                    <th class="cell act">Acciones</th>
+                </tr>
+                <?php foreach ($estudiantes as $estudiante) : ?>
+                    <tr class="row">
+                        <td class="cell pl"><?php echo $estudiante->rut_estu ?></td>
+                        <td class="cell"><?php echo $estudiante->nombres_estu ?></td>
+                        <td class="cell h"><?php echo $estudiante->apellidos_estu ?></td>
+                        <td class="cell"><?php echo $estudiante->id_curso ?></td>
+                        <td class="cell"><?php echo $estudiante->rut_apod ?></td>
+                        <td class="action cell">
+
+                            <a href="/admin/estudiante/actualizar?id=<?php echo $estudiante->rut_estu; ?>">
+                                <input class="btn-action actualizar" type="button" value="Editar" />
+                            </a>
+
+                            <form method="POST" action="admin/estudiante/eliminar">
+                                <input class="btn-action eliminar" type="submit" value="Borrar" />
+                                <input type="hidden" name="id" value="<?php echo $estudiante->rut_estu; ?>" />
+                                <input type="hidden" name="entidad" value="estudiante" />
                             </form>
-                            <a href="/admin/estudiante/actualizar?id=<?php echo $estudiante->rut_estudiante; ?>" class="boton-verde-block">Actualizar</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <a href="/admin/estudiantes" class="viewAll">Ver todos</a>
 
-        <table class="table" id="apoderado">
-            <h2 class="tab-title" >Apoderados</h2>
-            <thead class="Apoderado b3">
-                <tr>
-                    <th>Rut</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
+        <table class="table">
+            <h2 class="tab-title">Cursos</h2>
             <tbody>
-                <?php foreach($apoderados as $apoderado): ?>
-                    <tr>
-                        <td><?php echo $apoderado->rut_apoderado ?></td>
-                        <td><?php echo $apoderado->nombre_apoderado ?></td>
-                        <td><?php echo $apoderado->apellido_apoderado ?></td>
-                        <td>
-                            <form method="POST" class="w-100" action="admin/apoderado/eliminar">
-                                <input type="hidden" name="id" value="<?php echo $apoderado->rut_apoderado; ?>">
-                                <input type="hidden" name="entidad" value="apoderado">
-                                <input type="submit" class="boton-rojo-block" value="Eliminar">
+                <tr class="header row">
+                    <th class="cell pl">N°</th>
+                    <th class="cell">Grado y Letra</th>
+                    <th class="cell">N° Sala</th>
+                    <th class="cell act">Acciones</th>
+                </tr>
+                <?php foreach ($cursos as $curso) : ?>
+                    <tr class="row">
+                        <td class="cell pl"><?php echo $curso->id_curso ?></td>
+                        <td class="cell"><?php echo $curso->grado_curso . $curso->letra_curso ?></td>
+                        <td class="cell"><?php echo $curso->numero_sala ?></td>
+                        <td class="action cell">
+
+                            <a href="/admin/curso/actualizar?id=<?php echo $curso->id_curso; ?>">
+                                <input class="btn-action actualizar" type="button" value="Editar" />
+                            </a>
+
+                            <form method="POST" action="admin/curso/eliminar">
+                                <input class="btn-action eliminar" type="submit" value="Borrar" />
+                                <input type="hidden" name="id" value="<?php echo $curso->id_curso; ?>" />
+                                <input type="hidden" name="entidad" value="atraso" />
                             </form>
-                            <a href="/admin/apoderado/actualizar?id=<?php echo $apoderado->rut_apoderado; ?>" class="boton-verde-block">Actualizar</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <a href="/admin/cursos" class="viewAll">Ver todos</a>
 
-        <table class="table" id="funcionario">
-            <h2 class="tab-title" >Funcionarios</h2>
-            <thead class="Funcionario b4">
-                <tr>
-                    <th>Rut</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Email</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
+        <table class="table">
+            <h2 class="tab-title">Apoderados</h2>
             <tbody>
-                <?php foreach($funcionarios as $funcionario): ?>
-                    <tr>
-                        <td><?php echo $funcionario->rut_func ?></td>
-                        <td><?php echo $funcionario->nombre_func ?></td>
-                        <td><?php echo $funcionario->apellido_func ?></td>
-                        <td><?php echo $funcionario->email_func ?></td>
-                        <td>
-                            <form method="POST" class="w-100" action="admin/funcionario/eliminar">
-                                <input type="hidden" name="id" value="<?php echo $funcionario->rut_func; ?>">
-                                <input type="hidden" name="entidad" value="funcionario">
-                                <input type="submit" class="boton-rojo-block" value="Eliminar">
+                <tr class="header row">
+                    <th class="cell pl">Rut</th>
+                    <th class="cell">Nombres</th>
+                    <th class="cell">Apellidos</th>
+                    <th class="cell act">Acciones</th>
+                </tr>
+                <?php foreach ($apoderados as $apoderado) : ?>
+                    <tr class="row">
+                        <td class="cell pl"><?php echo $apoderado->rut_apod ?></td>
+                        <td class="cell"><?php echo $apoderado->nombres_apod ?></td>
+                        <td class="cell h"><?php echo $apoderado->apellidos_apod ?></td>
+                        <td class="action cell">
+
+                            <a href="/admin/apoderado/actualizar?id=<?php echo $apoderado->rut_apod; ?>">
+                                <input class="btn-action actualizar" type="button" value="Editar" />
+                            </a>
+
+                            <form method="POST" action="admin/apoderado/eliminar">
+                                <input class="btn-action eliminar" type="submit" value="Borrar" />
+                                <input type="hidden" name="id" value="<?php echo $apoderado->rut_apod; ?>" />
+                                <input type="hidden" name="entidad" value="atraso" />
                             </form>
-                            <a href="/admin/funcionario/actualizar?id=<?php echo $funcionario->rut_func; ?>" class="boton-verde-block">Actualizar</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <a href="/admin/apoderados" class="viewAll">Ver todos</a>
+
+        <table class="table">
+            <h2 class="tab-title">Funcionarios</h2>
+            <tbody>
+                <tr class="header row">
+                    <th class="cell pl">Rut</th>
+                    <th class="cell">Nombres</th>
+                    <th class="cell">Apellidos</th>
+                    <th class="cell">Email</th>
+                    <th class="cell act">Acciones</th>
+                </tr>
+                <?php foreach ($funcionarios as $funcionario) : ?>
+                    <tr class="row">
+                        <td class="cell pl"><?php echo $funcionario->rut_func ?></td>
+                        <td class="cell"><?php echo $funcionario->nombres_func ?></td>
+                        <td class="cell h"><?php echo $funcionario->apellidos_func ?></td>
+                        <td class="cell"><?php echo $funcionario->email_func ?></td>
+                        <td class="action cell">
+
+                            <a href="/admin/funcionario/actualizar?id=<?php echo $funcionario->rut_func; ?>">
+                                <input class="btn-action actualizar" type="button" value="Editar" />
+                            </a>
+
+                            <form method="POST" action="admin/funcionario/eliminar">
+                                <input class="btn-action eliminar" type="submit" value="Borrar" />
+                                <input type="hidden" name="id" value="<?php echo $funcionario->rut_func; ?>" />
+                                <input type="hidden" name="entidad" value="atraso" />
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <a href="/admin/funcionarios" class="viewAll">Ver todos</a>
+
     <?php endif; ?>
-    
+
+    <script src="../../js/app.js"></script>
 
 </main>

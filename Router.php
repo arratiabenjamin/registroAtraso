@@ -23,6 +23,7 @@
             $rutasProtegidas = ['/admin', 
                                 '/admin/atrasos', '/admin/atraso/crear', '/admin/atraso/actualizar', '/admin/atraso/eliminar',
                                 '/admin/estudiantes', '/admin/estudiante/crear', '/admin/estudiante/actualizar', '/admin/estudiante/eliminar',
+                                '/admin/cursos', '/admin/curso/crear', '/admin/curso/actualizar', '/admin/curso/eliminar',
                                 '/admin/apoderados', '/admin/apoderado/crear', '/admin/apoderado/actualizar', '/admin/apoderado/eliminar',
                                 '/admin/funcionarios', '/admin/funcionario/crear', '/admin/funcionario/actualizar', '/admin/funcionario/eliminar',
                                 '/apoderado', '/apoderado/estudiante'];
@@ -39,6 +40,8 @@
                 }else{
                     header('Location: /apoderado');
                 }
+            } else if(in_array($urlActual, $rutasProtegidas) && $_SESSION['tipo'] != 'funcionario' && $urlActual != '/apoderado' && $urlActual != '/apoderado/estudiante'){
+                header('Location: /apoderado');
             }
 
             //Guardar FuncAsoc
@@ -63,12 +66,12 @@
             foreach( $datos as $key => $value ){
                 $$key = $value;
             }
-            // $contenido = ob_get_clean(); //PRODUCE ERRORES - NO ENCONTRADA SU SOLUCION
+            $contenido = ob_get_clean(); //PRODUCE ERRORES - NO ENCONTRADA SU SOLUCION
             if(!$login){
                 include_once __DIR__ . "/views/layout.php";
             }
             
-            // ob_start(); //PRODUCE ERRORES - NO ENCONTRADA SU SOLUCION
+            ob_start(); //PRODUCE ERRORES - NO ENCONTRADA SU SOLUCION
             include_once __DIR__ . "/views/$view.php";
 
 
